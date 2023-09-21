@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 
 
 const Index = () => {
-
+  // Routing hook
   const router = useRouter();
 
   return (

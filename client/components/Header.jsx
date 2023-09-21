@@ -1,14 +1,13 @@
 import React from 'react';
 
 const Header = () => {
+  const { name } = { name: 'Test Name' };
 
-    const { nombre } = { nombre: "Nombre de Prueba" }
-
-    return (
-        <div className="flex justify-end mb-6">
-            <p className="mr-2">Hola: {nombre}</p>
-        </div>
-    );
+  return (
+    <div className="flex justify-end mb-6">
+      <p className="mr-2">Hola: {name}</p>
+    </div>
+  );
 };
 
 export default Header;
