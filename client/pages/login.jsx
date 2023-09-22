@@ -1,28 +1,44 @@
 import Layout from '@/components/Layout'
+import useSelect from '@/hooks/useSelect'
+import { typeOfUsers } from '@/types'
 import { useFormik } from 'formik'
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import * as Yup from 'yup'
 
 const Login = () => {
+
+  const [typeUser, SelectUser] = useSelect('', typeOfUsers)
 
   // Formik
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
+      typeUser: '',
     },
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Email isn't valid")
         .required('Email is required'),
       password: Yup.string()
-        .required('The password is required')
+        .required('The password is required'),
+      typeUser: Yup.string()
+        .required('Type of user is required')
     }),
     onSubmit: valores => {
-      const { email, password } = valores
+      const { email, password, typeUser } = valores
       console.log(valores)
     }
   })
+
+  useEffect(() => {
+    const changeTypeUserOfFormik = () => {
+      if (typeUser.value) {
+        formik.setFieldValue('typeUser', typeUser.value);
+      }
+    }
+    changeTypeUserOfFormik()
+  }, [typeUser])
 
   return (
     <Fragment>
@@ -35,6 +51,23 @@ const Login = () => {
               className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
               onSubmit={formik.handleSubmit}
             >
+              <div className='mb-4'>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="typeUser">
+                  Type of User
+                </label>
+
+                <div>
+                  <SelectUser />
+                </div>
+              </div>
+
+              {formik.touched.typeUser && formik.errors.typeUser ? (
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                  <p className="font-bold">Error</p>
+                  <p>{formik.errors.typeUser}</p>
+                </div>
+              ) : null}
+
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                   Email
