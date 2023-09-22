@@ -1,17 +1,16 @@
-import Layout from '@/components/Layout'
-import useSelect from '@/hooks/useSelect'
-import { typeOfUsers } from '@/types'
-import { useFormik } from 'formik'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { Fragment, useEffect } from 'react'
-import * as Yup from 'yup'
+import Layout from '@/components/Layout';
+import useSelect from '@/hooks/useSelect';
+import { typeOfUsers } from '@/types';
+import { useFormik } from 'formik';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { Fragment, useEffect } from 'react';
+import * as Yup from 'yup';
 
 const Login = () => {
-
   const router = useRouter();
 
-  const [typeUser, SelectUser] = useSelect('', typeOfUsers)
+  const [typeUser, SelectUser] = useSelect('', typeOfUsers);
 
   // Formik
   const formik = useFormik({
@@ -24,25 +23,23 @@ const Login = () => {
       email: Yup.string()
         .email("Email isn't valid")
         .required('Email is required'),
-      password: Yup.string()
-        .required('The password is required'),
-      typeUser: Yup.string()
-        .required('Type of user is required')
+      password: Yup.string().required('The password is required'),
+      typeUser: Yup.string().required('Type of user is required'),
     }),
-    onSubmit: valores => {
-      const { email, password, typeUser } = valores
-      console.log(valores)
-    }
-  })
+    onSubmit: (valores) => {
+      const { email, password, typeUser } = valores;
+      console.log(valores);
+    },
+  });
 
   useEffect(() => {
     const changeTypeUserOfFormik = () => {
       if (typeUser.value) {
         formik.setFieldValue('typeUser', typeUser.value);
       }
-    }
-    changeTypeUserOfFormik()
-  }, [typeUser])
+    };
+    changeTypeUserOfFormik();
+  }, [typeUser]);
 
   return (
     <Fragment>
@@ -55,8 +52,11 @@ const Login = () => {
               className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
               onSubmit={formik.handleSubmit}
             >
-              <div className='mb-4'>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="typeUser">
+              <div className="mb-4">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="typeUser"
+                >
                   Type of User
                 </label>
 
@@ -66,14 +66,17 @@ const Login = () => {
               </div>
 
               {formik.touched.typeUser && formik.errors.typeUser ? (
-                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                   <p className="font-bold">Error</p>
                   <p>{formik.errors.typeUser}</p>
                 </div>
               ) : null}
 
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="email"
+                >
                   Email
                 </label>
 
@@ -89,14 +92,17 @@ const Login = () => {
               </div>
 
               {formik.touched.email && formik.errors.email ? (
-                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                   <p className="font-bold">Error</p>
                   <p>{formik.errors.email}</p>
                 </div>
               ) : null}
 
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="password"
+                >
                   Password
                 </label>
 
@@ -112,7 +118,7 @@ const Login = () => {
               </div>
 
               {formik.touched.password && formik.errors.password ? (
-                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" >
+                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
                   <p className="font-bold">Error</p>
                   <p>{formik.errors.password}</p>
                 </div>
@@ -124,21 +130,20 @@ const Login = () => {
                 value="Iniciar Sesión"
               />
 
-              <div className='w-full mt-5 p-2 text-center'>
-                <p className='block text-gray-700 text-[1.1rem] font-bold'>Do you want to {' '}
+              <div className="w-full mt-5 p-2 text-center">
+                <p className="block text-gray-700 text-[1.1rem] font-bold">
+                  Do you want to{' '}
                   <Link href="register">
-                    <span className='text-sky-800'>register</span>
-                    {' '} ?
+                    <span className="text-sky-800">register</span> ?
                   </Link>
                 </p>
               </div>
-
             </form>
           </div>
         </div>
       </Layout>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
