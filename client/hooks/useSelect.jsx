@@ -11,7 +11,7 @@ const useSelect = (initialState, options) => {
   const SelectHook = () => (
     <Select
       instanceId={(option) => option.id}
-      className="mt-3"
+      className='mt-3'
       options={options}
       onChange={(option) => handleChange(option)}
       value={state}
