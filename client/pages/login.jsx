@@ -2,10 +2,14 @@ import Layout from '@/components/Layout'
 import useSelect from '@/hooks/useSelect'
 import { typeOfUsers } from '@/types'
 import { useFormik } from 'formik'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { Fragment, useEffect } from 'react'
 import * as Yup from 'yup'
 
 const Login = () => {
+
+  const router = useRouter();
 
   const [typeUser, SelectUser] = useSelect('', typeOfUsers)
 
@@ -119,6 +123,15 @@ const Login = () => {
                 className="bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900"
                 value="Iniciar Sesión"
               />
+
+              <div className='w-full mt-5 p-2 text-center'>
+                <p className='block text-gray-700 text-[1.1rem] font-bold'>Do you want to {' '}
+                  <Link href="register">
+                    <span className='text-sky-800'>register</span>
+                    {' '} ?
+                  </Link>
+                </p>
+              </div>
 
             </form>
           </div>
