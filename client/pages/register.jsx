@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import useSelect from '@/hooks/useSelect';
-import { typeOfUsers } from '@/types';
+import { typeOfUsers,  methodType} from '@/types';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ const Register = () => {
   const router = useRouter();
 
   const [typeUser, SelectUser] = useSelect('', typeOfUsers);
+  const [paymentMethod, SelectPaymentMethod] = useSelect('', methodType);
 
   // Formik
   const formik = useFormik({
@@ -32,7 +33,7 @@ const Register = () => {
       typeUser: Yup.string().required('You need to choose a type of user'),
     }),
     onSubmit: (valores) => {
-      const { email, password, typeUser } = valores;
+      const { firstName, lastName, email, password, phoneNumber, recidenseAddres, paymentMethod, typeUser } = valores;
       console.log(valores);
     },
   });
@@ -45,6 +46,15 @@ const Register = () => {
     };
     changeTypeUserOfFormik();
   }, [typeUser]);
+
+  useEffect(() => {
+    const changePaymentMethodFormik = () => {
+      if (paymentMethod.value) {
+        formik.setFieldValue('paymentMethod', paymentMethod.value);
+      }
+    };
+    changePaymentMethodFormik ();
+  }, [paymentMethod]);
 
   return (
     <Fragment>
@@ -79,6 +89,42 @@ const Register = () => {
 
               {formik.values.typeUser && (
                 <>
+                <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='firstName'
+                    >
+                      First Name
+                    </label>
+
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='firstName'
+                      type='firstName'
+                      placeholder='User FirstName'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.firstName}
+                    />
+                  </div>
+                <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='lastName'
+                    >
+                      Last Name
+                    </label>
+
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='lastName'
+                      type='lastName'
+                      placeholder='User LastName'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.lastName}
+                    />
+                  </div>
                   <div className='mb-4'>
                     <label
                       className='block text-gray-700 text-sm font-bold mb-2'
@@ -97,7 +143,61 @@ const Register = () => {
                       value={formik.values.email}
                     />
                   </div>
+                  <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='phoneNumber'
+                    >
+                      Phone Number
+                    </label>
 
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='phoneNumber'
+                      type='phoneNumber'
+                      placeholder='User Phonenumber'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.phoneNumber}
+                    />
+                  </div>
+                  <div className='mb-4'>
+                <label
+                  className='block text-gray-700 text-sm font-bold mb-2'
+                  htmlFor='paymentMethod'
+                >
+                  Type of Payment Method
+                </label>
+
+                <div>
+                  <SelectPaymentMethod />
+                </div>
+
+                {formik.touched.paymentMethod && formik.errors.paymentMethod ? (
+                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                  <p className='font-bold'>Important</p>
+                  <p>{formik.errors.paymentMethod}</p>
+                </div>
+              ) : null}
+              </div>
+                  <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='recidenseAddres'
+                    >
+                      Recidense Addres
+                    </label>
+
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='recidenseAddres'
+                      type='recidenseAddres'
+                      placeholder='User recidense address'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.recidenseAddres}
+                    />
+                  </div>
                   {formik.touched.email && formik.errors.email ? (
                     <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                       <p className='font-bold'>Error</p>
