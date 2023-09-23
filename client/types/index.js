@@ -5,7 +5,14 @@ export const typeOfUsers = [
 ]
 
 export const  methodType= [
-  { value: 'CRÉDITO', label: 'credito' },
-  { value: 'DEBITO', label: 'debito' },
-  { value: 'EFECTIVO', label: 'efectivo' },
+  { value: 'BANCOLOMBIA', label: 'Bancolombia' },
+  { value: 'BANCOCAJASOCIAL', label: 'Banco Caja Social' },
+  { value: 'DAVIPLATA', label: 'Daviplata' },
+  { value: 'NEQUI', label: 'Nequi' },
+  { value: 'BANCODAVIVIENDA', label: 'Banco Davivienda' },
+  { value: 'BANCOBBVA', label: 'Banco BBVA' },
+  { value: 'BANCOBOGOTA', label: 'Banco de Bogota' },
+  { value: 'BANCOMULTIBANK', label: 'Banco Multibank' },
+  { value: 'BANCOCONFIAR', label: 'Banco Confiar' },
 ]
+
