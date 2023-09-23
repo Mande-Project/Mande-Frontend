@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
 import { methodType, typeOfUsers } from '@/types';
 import { useFormik } from 'formik';
@@ -26,7 +27,7 @@ const Register = () => {
       password: '',
       phoneNumber: '',
       residenceAddress: '',
-      paymentMethod: 'x',
+      paymentMethod: '',
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -71,7 +72,16 @@ const Register = () => {
         paymentMethod,
         typeUser,
       } = valores;
-      console.log(valores);
+
+      const functionThatReturnPromise = () =>
+        new Promise((resolve) => setTimeout(resolve, 3000));
+      showToast(
+        'promise',
+        '',
+        functionThatReturnPromise,
+        'Register Success',
+        'Error in Register',
+      );
     },
   });
 
@@ -94,7 +104,7 @@ const Register = () => {
     };
 
     handleFormikErrorsChange();
-  }, [typeUser, formik.errors]);
+  }, [typeUser, paymentMethod, formik.errors]);
 
   const handleToSecondPart = (e) => {
     e.preventDefault();
@@ -113,7 +123,10 @@ const Register = () => {
         <div className='flex flex-row flex-wrap justify-center'>
           <div className='flex justify-center mt-5 '>
             <div className='w-full max-w-sm'>
-              <form className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'>
+              <form
+                className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
+                style={{ width: '400px' }}
+              >
                 <div className='mb-4'>
                   <label
                     className='block text-gray-700 text-sm font-bold mb-2'
@@ -276,6 +289,7 @@ const Register = () => {
                 <form
                   className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
                   onSubmit={formik.handleSubmit}
+                  style={{ width: '400px' }}
                 >
                   <div className='mb-4'>
                     <label
@@ -354,7 +368,7 @@ const Register = () => {
                   <input
                     type='submit'
                     className='bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
-                    value='Iniciar Sesión'
+                    value='Register'
                   />
 
                   <div className='w-full mt-5 p-2 text-center'>

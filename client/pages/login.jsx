@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
 import { typeOfUsers } from '@/types';
 import { useFormik } from 'formik';
@@ -29,6 +30,16 @@ const Login = () => {
     onSubmit: (valores) => {
       const { email, password, typeUser } = valores;
       console.log(valores);
+
+      const functionThatReturnPromise = () =>
+        new Promise((resolve) => setTimeout(resolve, 3000));
+      showToast(
+        'promise',
+        '',
+        functionThatReturnPromise,
+        'Login Success',
+        'Error in Login',
+      );
     },
   });
 
@@ -127,7 +138,7 @@ const Login = () => {
               <input
                 type='submit'
                 className='bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
-                value='Iniciar Sesión'
+                value='Login'
               />
 
               <div className='w-full mt-5 p-2 text-center'>

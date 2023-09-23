@@ -2,7 +2,6 @@ import Layout from '@/components/Layout';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-
 const Index = () => {
   // Routing hook
   const router = useRouter();
