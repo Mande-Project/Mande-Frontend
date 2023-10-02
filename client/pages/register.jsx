@@ -1,3 +1,4 @@
+import { registerClient, registerWorker } from '@/api/access';
 import Layout from '@/components/Layout';
 import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
@@ -6,13 +7,13 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 const Register = () => {
   const router = useRouter();
 
   const [typeUser, SelectUser] = useSelect('', typeOfUsers);
-  const [paymentMethod, SelectPaymentMethod] = useSelect('', methodType);
   const [toSecPart, setToSecPart] = useState(false);
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
@@ -21,23 +22,23 @@ const Register = () => {
   const formik = useFormik({
     initialValues: {
       typeUser: '',
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
-      phoneNumber: '',
+      phone: '',
       residenceAddress: '',
-      paymentMethod: '',
     },
     validationSchema: Yup.object({
-      firstName: Yup.string()
+      first_name: Yup.string()
         .max(30, 'Firstname must not have over 30 letters')
         .required('First name is required'),
-      lastName: Yup.string()
+      last_name: Yup.string()
         .max(30, 'Lastname must not have over 30 letters')
         .required('Last name is required'),
       email: Yup.string()
-        .email('Email is not valid')
+        .email('Email is not valid') // showToast('success', `${data}`);
+
         .matches(
           /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
           'Email is not valid',
@@ -47,8 +48,8 @@ const Register = () => {
         .min(5, 'The password must not at least 5 characters')
         .max(60, 'The password must not have over 60 characters')
         .required('The password is required'),
-      phoneNumber: Yup.string()
-        .matches(/^[0-9]+$/, 'phoneNumber must contain only numbers')
+      phone: Yup.string()
+        .matches(/^[0-9]+$/, 'phone must contain only numbers')
         .min(7, 'Phone number must have at least 7 numbers')
         .max(10, 'Phone number must not have over 10 numbers')
         .required('Phone number is required'),
@@ -56,55 +57,68 @@ const Register = () => {
         .min(5, 'Residence address must have at least 5 characters')
         .max(50, 'Residence address must not have over 50 characters')
         .required('Residence address is required'),
-      paymentMethod: Yup.string().required(
-        'You need to choose a payment method',
-      ),
       typeUser: Yup.string().required('You need to choose a type of user'),
     }),
-    onSubmit: (valores) => {
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-        phoneNumber,
-        residenceAddress,
-        paymentMethod,
-        typeUser,
-      } = valores;
+    onSubmit: (values) => {
+      const { first_name, last_name, typeUser } = values;
+      values.username = `${first_name}_${last_name}`;
 
-      const functionThatReturnPromise = () =>
-        new Promise((resolve) => setTimeout(resolve, 3000));
-      showToast(
-        'promise',
-        '',
-        functionThatReturnPromise,
-        'Register Success',
-        'Error in Register',
-      );
+      if (typeUser === 'CLIENT') {
+        registerClientFunction(values);
+      } else if (typeUser === 'WORKER') {
+        registerWorkerFunction(values);
+      } else {
+        showToast('error', 'Typer of user unknown');
+      }
     },
   });
+
+  const registerClientFunction = async (values) => {
+    const id = toast.loading('Loading...');
+    try {
+      const { data } = await registerClient(values);
+      showToast('promiseS', `${data}`, id);
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } catch (error) {
+      const { data } = error.response;
+      showToast('promiseE', `${data}`, id);
+    }
+  };
+
+  const registerWorkerFunction = async (values) => {
+    const id = toast.loading('Loading...');
+    try {
+      const { data } = await registerWorker(values);
+      showToast('promiseS', `${data}`, id);
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    } catch (error) {
+      const { data } = error.response;
+      showToast('promiseE', `${data}`, id);
+    }
+  };
 
   useEffect(() => {
     const changeTypeUserOfFormik = () => {
       if (typeUser.value) {
         formik.setFieldValue('typeUser', typeUser.value);
       }
-      if (paymentMethod.value) {
-        formik.setFieldValue('paymentMethod', paymentMethod.value);
-      }
     };
     changeTypeUserOfFormik();
 
     const handleFormikErrorsChange = () => {
-      const { typeUser, firstName, lastName, email, password } = formik.errors;
+      const { typeUser, first_name, last_name, email, password } =
+        formik.errors;
       setIsValidFirstPart(
-        !typeUser && !email && !password && !firstName && !lastName,
+        !typeUser && !email && !password && !first_name && !last_name,
       );
     };
 
     handleFormikErrorsChange();
-  }, [typeUser, paymentMethod, formik.errors]);
+  }, [typeUser, formik.errors]);
 
   const handleToSecondPart = (e) => {
     e.preventDefault();
@@ -152,54 +166,54 @@ const Register = () => {
                     <div className='mb-4'>
                       <label
                         className='block text-gray-700 text-sm font-bold mb-2'
-                        htmlFor='firstName'
+                        htmlFor='first_name'
                       >
                         First Name
                       </label>
 
                       <input
                         className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        id='firstName'
+                        id='first_name'
                         type='text'
                         placeholder='User FirstName'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.firstName}
+                        value={formik.values.first_name}
                       />
                     </div>
 
-                    {(formik.touched.firstName && formik.errors.firstName) ||
-                    (tryToPass && formik.errors.firstName) ? (
+                    {(formik.touched.first_name && formik.errors.first_name) ||
+                    (tryToPass && formik.errors.first_name) ? (
                       <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                         <p className='font-bold'>Error</p>
-                        <p>{formik.errors.firstName}</p>
+                        <p>{formik.errors.first_name}</p>
                       </div>
                     ) : null}
 
                     <div className='mb-4'>
                       <label
                         className='block text-gray-700 text-sm font-bold mb-2'
-                        htmlFor='lastName'
+                        htmlFor='last_name'
                       >
                         Last Name
                       </label>
 
                       <input
                         className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        id='lastName'
+                        id='last_name'
                         type='text'
                         placeholder='User LastName'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.lastName}
+                        value={formik.values.last_name}
                       />
                     </div>
 
-                    {(formik.touched.lastName && formik.errors.lastName) ||
-                    (tryToPass && formik.errors.lastName) ? (
+                    {(formik.touched.last_name && formik.errors.last_name) ||
+                    (tryToPass && formik.errors.last_name) ? (
                       <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                         <p className='font-bold'>Error</p>
-                        <p>{formik.errors.lastName}</p>
+                        <p>{formik.errors.last_name}</p>
                       </div>
                     ) : null}
 
@@ -294,26 +308,26 @@ const Register = () => {
                   <div className='mb-4'>
                     <label
                       className='block text-gray-700 text-sm font-bold mb-2'
-                      htmlFor='phoneNumber'
+                      htmlFor='phone'
                     >
                       Phone Number
                     </label>
 
                     <input
                       className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                      id='phoneNumber'
+                      id='phone'
                       type='number'
                       placeholder='User Phonenumber'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.phoneNumber}
+                      value={formik.values.phone}
                     />
                   </div>
 
-                  {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                  {formik.touched.phone && formik.errors.phone ? (
                     <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                       <p className='font-bold'>Error</p>
-                      <p>{formik.errors.phoneNumber}</p>
+                      <p>{formik.errors.phone}</p>
                     </div>
                   ) : null}
 
@@ -341,27 +355,6 @@ const Register = () => {
                     <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                       <p className='font-bold'>Error</p>
                       <p>{formik.errors.residenceAddress}</p>
-                    </div>
-                  ) : null}
-
-                  <div className='mb-4'>
-                    <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
-                      htmlFor='paymentMethod'
-                    >
-                      Type of Payment Method
-                    </label>
-
-                    <div>
-                      <SelectPaymentMethod />
-                    </div>
-                  </div>
-
-                  {formik.touched.paymentMethod &&
-                  formik.errors.paymentMethod ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.paymentMethod}</p>
                     </div>
                   ) : null}
 

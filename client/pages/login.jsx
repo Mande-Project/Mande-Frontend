@@ -1,3 +1,4 @@
+import { loginClient, loginWorker } from '@/api/access';
 import Layout from '@/components/Layout';
 import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
@@ -6,6 +7,7 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 const Login = () => {
@@ -27,21 +29,48 @@ const Login = () => {
       password: Yup.string().required('The password is required'),
       typeUser: Yup.string().required('Type of user is required'),
     }),
-    onSubmit: (valores) => {
-      const { email, password, typeUser } = valores;
-      console.log(valores);
+    onSubmit: (values) => {
+      const { typeUser } = values;
 
-      const functionThatReturnPromise = () =>
-        new Promise((resolve) => setTimeout(resolve, 3000));
-      showToast(
-        'promise',
-        '',
-        functionThatReturnPromise,
-        'Login Success',
-        'Error in Login',
-      );
+      if (typeUser === 'CLIENT') {
+        loginClientFunction(values);
+      } else if (typeUser === 'WORKER') {
+        loginWorkerFunction(values);
+      } else {
+        showToast('error', 'Typer of user unknown');
+      }
     },
   });
+
+  const loginClientFunction = async (values) => {
+    const id = toast.loading('Loading...');
+    try {
+      const { data } = await loginClient(values);
+      showToast('promiseS', 'authenticating...', id);
+      setTimeout(() => {
+        localStorage.setItem('token', data.token);
+        router.push('/');
+      }, 2000);
+    } catch (error) {
+      const { data } = error.response;
+      showToast('promiseE', `${data}`, id);
+    }
+  };
+
+  const loginWorkerFunction = async (values) => {
+    const id = toast.loading('Loading...');
+    try {
+      const { data } = await loginWorker(values);
+      showToast('promiseS', 'authenticating...', id);
+      setTimeout(() => {
+        localStorage.setItem('token', data.token);
+        router.push('/');
+      }, 2000);
+    } catch (error) {
+      const { data } = error.response;
+      showToast('promiseE', `${data}`, id);
+    }
+  };
 
   useEffect(() => {
     const changeTypeUserOfFormik = () => {

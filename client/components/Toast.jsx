@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-const showToast = (type, message, promise, successPromise, errorPromise) => {
+const showToast = (type, message, idPromise) => {
   switch (type) {
     case 'warning':
       toast.warn(message, {
@@ -50,12 +50,37 @@ const showToast = (type, message, promise, successPromise, errorPromise) => {
         theme: 'dark',
       });
       break;
-    case 'promise':
-      toast.promise(promise, {
-        pending: 'Loading',
-        success: `${successPromise} 👌`,
-        error: `${errorPromise} 🤯`,
+    case 'promiseS':
+      toast.update(idPromise, {
+        render: `${message}`,
+        type: 'success',
+        isLoading: false,
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
       });
+      break;
+
+    case 'promiseE':
+      toast.update(idPromise, {
+        render: `${message}`,
+        type: 'error',
+        isLoading: false,
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      break;
   }
 };
 
