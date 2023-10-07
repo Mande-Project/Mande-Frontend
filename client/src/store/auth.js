@@ -1,4 +1,4 @@
-import axios from '@/libs/axios';
+import axios from '@/src/libs/axios';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 

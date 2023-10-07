@@ -1,10 +1,10 @@
-import { loginClient, loginWorker } from '@/api/access';
-import { loginRequest, profileRequest } from '@/api/auth';
-import Layout from '@/components/Layout';
-import showToast from '@/components/Toast';
-import useSelect from '@/hooks/useSelect';
-import { useAuthStore } from '@/store/auth';
-import { typeOfUsers } from '@/types';
+import { loginClient, loginWorker } from '@/src/api/access';
+import { loginRequest, profileRequest } from '@/src/api/auth';
+import Layout from '@/src/components/Layout';
+import showToast from '@/src/components/Toast';
+import useSelect from '@/src/hooks/useSelect';
+import { useAuthStore } from '@/src/store/auth';
+import { typeOfUsers } from '@/src/types';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

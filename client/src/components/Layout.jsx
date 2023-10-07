@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/src/store/auth';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';

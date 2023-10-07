@@ -1,8 +1,8 @@
-import { registerClient, registerWorker } from '@/api/access';
-import Layout from '@/components/Layout';
-import showToast from '@/components/Toast';
-import useSelect from '@/hooks/useSelect';
-import { methodType, typeOfUsers } from '@/types';
+import { registerClient, registerWorker } from '@/src/api/access';
+import Layout from '@/src/components/Layout';
+import showToast from '@/src/components/Toast';
+import useSelect from '@/src/hooks/useSelect';
+import { methodType, typeOfUsers } from '@/src/types';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
