@@ -31,7 +31,7 @@ const Header = () => {
 
   return (
     <div className='sm:flex sm:justify-between mb-6'>
-      <p className='mr-2 mb-5 lg:mb-0'>{JSON.stringify(profile)}</p>
+      <p className='mr-2 mb-5 lg:mb-0'>Hola</p>
 
       <button
         onClick={() => handleLogout()}

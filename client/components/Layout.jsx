@@ -50,34 +50,28 @@ const Layout = ({ children }) => {
           </div>
         </div>
       ) : (
-        <>
-          {isAuth ? (
-            <div className='bg-gray-200 min-h-screen'>
-              <div className='flex min-h-screen'>
-                <Sidebar />
+        <div className='bg-gray-200 min-h-screen'>
+          <div className='flex min-h-screen'>
+            <Sidebar />
 
-                <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
-                  <ToastContainer
-                    position='top-right'
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss={false}
-                    draggable
-                    pauseOnHover
-                    theme='dark'
-                  />
-                  <Header />
-                  {children}
-                </main>
-              </div>
-            </div>
-          ) : (
-            <p>You don't have the credentials</p>
-          )}
-        </>
+            <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
+              <ToastContainer
+                position='top-right'
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover
+                theme='dark'
+              />
+              <Header />
+              {children}
+            </main>
+          </div>
+        </div>
       )}
     </Fragment>
   );

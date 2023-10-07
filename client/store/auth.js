@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from '@/libs/axios';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
-export const useAuthStore = create(persist((set) => ({
+export const useAuthStore = create(devtools(persist((set) => ({
   token: "",
   profile: null,
   isAuth: false,
@@ -11,8 +11,4 @@ export const useAuthStore = create(persist((set) => ({
   logout: () => set((state) => ({ token: "", profile: null, isAuth: false })),
 }), {
   name: "auth"
-}));
-
-export const profileRequest = async () => {
-  await axios.get('http://localhost:3000/dataUsers.json')
-}
+})));

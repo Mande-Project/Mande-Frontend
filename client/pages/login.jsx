@@ -1,4 +1,5 @@
 import { loginClient, loginWorker } from '@/api/access';
+import { loginRequest, profileRequest } from '@/api/auth';
 import Layout from '@/components/Layout';
 import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
@@ -50,9 +51,12 @@ const Login = () => {
     const id = toast.loading('Loading...');
     try {
       // const { data } = await loginClient(values);
+      // const { data } = await loginRequest(values);
       showToast('promiseS', 'authenticating...', id);
-      setTimeout(() => {
+      setTimeout(async () => {
         setToken('19292');
+        // const resProfile = await profileRequest();
+        // setProfile(resProfile)
         setProfile({
           id: 1,
           name: 'Jhon Doe',
