@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-const showToast = (type, message, idPromise) => {
+const showToast = (type, message, idPromise, position) => {
   switch (type) {
     case 'warning':
       toast.warn(message, {
@@ -71,7 +71,8 @@ const showToast = (type, message, idPromise) => {
         render: `${message}`,
         type: 'error',
         isLoading: false,
-        position: 'top-right',
+        // position: 'top-right',
+        position: position || 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

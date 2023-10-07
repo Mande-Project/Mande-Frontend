@@ -1,4 +1,4 @@
-import { accessApi } from ".";
+import { accessApi, baseApi } from ".";
 
 export const registerClient = (body) => 
   accessApi.post('customer_register/', body)
@@ -12,7 +12,8 @@ export const loginClient = (body) =>
 export const loginWorker = (body) =>
   accessApi.post('worker_login/', body)
 
-// export const getCar = (id) => path.get(`vehicle/${id}`);
+export const logoutUser = () =>
+  accessApi.post('logout/')
 
-// export const getCarByColor = (id, vehicle, color) =>
-//   path.get(`sucursal/${id}/${vehicle}/${color}/vehicle-sucursal-id/`);
+export const testSession = () =>
+  baseApi.get()

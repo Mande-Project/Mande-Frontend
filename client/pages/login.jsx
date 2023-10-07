@@ -2,6 +2,7 @@ import { loginClient, loginWorker } from '@/api/access';
 import Layout from '@/components/Layout';
 import showToast from '@/components/Toast';
 import useSelect from '@/hooks/useSelect';
+import { useAuthStore } from '@/store/auth';
 import { typeOfUsers } from '@/types';
 import { useFormik } from 'formik';
 import Link from 'next/link';
@@ -11,6 +12,9 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 const Login = () => {
+  const setToken = useAuthStore((state) => state.setToken);
+  const setProfile = useAuthStore((state) => state.setProfile);
+
   const router = useRouter();
 
   const [typeUser, SelectUser] = useSelect('', typeOfUsers);
@@ -45,10 +49,15 @@ const Login = () => {
   const loginClientFunction = async (values) => {
     const id = toast.loading('Loading...');
     try {
-      const { data } = await loginClient(values);
+      // const { data } = await loginClient(values);
       showToast('promiseS', 'authenticating...', id);
       setTimeout(() => {
-        localStorage.setItem('token', data.token);
+        setToken('19292');
+        setProfile({
+          id: 1,
+          name: 'Jhon Doe',
+        });
+        // localStorage.setItem('token', data.token);
         router.push('/');
       }, 2000);
     } catch (error) {
@@ -60,10 +69,10 @@ const Login = () => {
   const loginWorkerFunction = async (values) => {
     const id = toast.loading('Loading...');
     try {
-      const { data } = await loginWorker(values);
+      // const { data } = await loginWorker(values);
       showToast('promiseS', 'authenticating...', id);
       setTimeout(() => {
-        localStorage.setItem('token', data.token);
+        // localStorage.setItem('token', data.token);
         router.push('/');
       }, 2000);
     } catch (error) {
