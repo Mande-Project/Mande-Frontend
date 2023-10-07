@@ -1,14 +1,33 @@
+import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'next/router';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 const Layout = ({ children }) => {
+  const isAuth = useAuthStore((state) => state.isAuth);
+
   // Routing hook
   const router = useRouter();
-  console.log(router.pathname);
+
+  useEffect(() => {
+    if (
+      !isAuth &&
+      router.pathname !== '/login' &&
+      router.pathname !== '/register'
+    ) {
+      router.push('/login');
+    }
+
+    if (
+      isAuth &&
+      (router.pathname === '/login' || router.pathname !== '/register')
+    ) {
+      router.push('/');
+    }
+  }, [isAuth, router.pathname]);
 
   return (
     <Fragment>
@@ -31,28 +50,34 @@ const Layout = ({ children }) => {
           </div>
         </div>
       ) : (
-        <div className='bg-gray-200 min-h-screen'>
-          <div className='flex min-h-screen'>
-            <Sidebar />
+        <>
+          {isAuth ? (
+            <div className='bg-gray-200 min-h-screen'>
+              <div className='flex min-h-screen'>
+                <Sidebar />
 
-            <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
-              <ToastContainer
-                position='top-right'
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss={false}
-                draggable
-                pauseOnHover
-                theme='dark'
-              />
-              <Header />
-              {children}
-            </main>
-          </div>
-        </div>
+                <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover
+                    theme='dark'
+                  />
+                  <Header />
+                  {children}
+                </main>
+              </div>
+            </div>
+          ) : (
+            <p>You don't have the credentials</p>
+          )}
+        </>
       )}
     </Fragment>
   );
