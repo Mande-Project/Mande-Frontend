@@ -1,17 +1,29 @@
 import { useAuthStore } from '@/src/store/auth';
 import axios from 'axios';
 
-const authApi = axios.create({
-  baseURL: "http://localhost:3000/",
-  withCredentials: true,
+export const apiWithAutorization = axios.create({
+  baseURL: 'http://localhost:8000/',
 })
 
-authApi.interceptors.request.use(config => {
-  const token = useAuthStore.getState().token
+apiWithAutorization.interceptors.request.use(config => {
+  const access = useAuthStore.getState().access
   config.headers = {
-    Authorization: `Bearer ${token}`
+    'Content-Type': 'application/json',
+    'Authorization': `JWT ${access}`,
+    'Accept': 'application/json',
   }
   return config
 })
 
-export default authApi;
+
+export const apiWithoutAutorization = axios.create({
+  baseURL: 'http://localhost:8000/',
+  // baseURL: `${process.env.REACT_APP_API_URL}`,
+})
+
+apiWithoutAutorization.interceptors.request.use(config => {
+  config.headers = {
+    'Content-Type': 'application/json',
+  }
+  return config
+})

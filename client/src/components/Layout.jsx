@@ -1,33 +1,14 @@
-import { useAuthStore } from '@/src/store/auth';
 import { useRouter } from 'next/router';
 import React, { Fragment, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header';
+import PrivateRoute from './PrivateRoute';
 import Sidebar from './Sidebar';
 
 const Layout = ({ children }) => {
-  const isAuth = useAuthStore((state) => state.isAuth);
-
   // Routing hook
   const router = useRouter();
-
-  useEffect(() => {
-    if (
-      !isAuth &&
-      router.pathname !== '/login' &&
-      router.pathname !== '/register'
-    ) {
-      router.push('/login');
-    }
-
-    if (
-      isAuth &&
-      (router.pathname === '/login' || router.pathname !== '/register')
-    ) {
-      router.push('/');
-    }
-  }, [isAuth, router.pathname]);
 
   return (
     <Fragment>
@@ -68,7 +49,7 @@ const Layout = ({ children }) => {
                 theme='dark'
               />
               <Header />
-              {children}
+              <PrivateRoute>{children}</PrivateRoute>
             </main>
           </div>
         </div>

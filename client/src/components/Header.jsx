@@ -1,14 +1,12 @@
-import { logoutUser } from '@/src/api/access';
 import { useAuthStore } from '@/src/store/auth';
 import { useRouter } from 'next/router';
-import React, { use } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 import showToast from './Toast';
 
 const Header = () => {
   const logout = useAuthStore((state) => state.logout);
   const profile = useAuthStore((state) => state.profile);
-  console.log(profile);
   const router = useRouter();
   const { name } = { name: 'Test Name' };
 

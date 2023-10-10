@@ -1,98 +1,49 @@
-import { loginClient, loginWorker } from '@/src/api/access';
-import { loginRequest, profileRequest } from '@/src/api/auth';
+import { loginRequest } from '@/src/api/auth';
 import Layout from '@/src/components/Layout';
 import showToast from '@/src/components/Toast';
-import useSelect from '@/src/hooks/useSelect';
-import { useAuthStore } from '@/src/store/auth';
-import { typeOfUsers } from '@/src/types';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+require('dotenv').config({ path: 'vars.env' });
 
 const Login = () => {
-  const setToken = useAuthStore((state) => state.setToken);
-  const setProfile = useAuthStore((state) => state.setProfile);
-
   const router = useRouter();
 
-  const [typeUser, SelectUser] = useSelect('', typeOfUsers);
-
-  // Formik
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
-      typeUser: '',
     },
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Email isn't valid")
         .required('Email is required'),
       password: Yup.string().required('The password is required'),
-      typeUser: Yup.string().required('Type of user is required'),
     }),
     onSubmit: (values) => {
-      const { typeUser } = values;
-
-      if (typeUser === 'CLIENT') {
-        loginClientFunction(values);
-      } else if (typeUser === 'WORKER') {
-        loginWorkerFunction(values);
-      } else {
-        showToast('error', 'Typer of user unknown');
-      }
+      handleLogin(values);
     },
   });
 
-  const loginClientFunction = async (values) => {
+  const handleLogin = async (values) => {
     const id = toast.loading('Loading...');
-    try {
-      // const { data } = await loginClient(values);
-      // const { data } = await loginRequest(values);
-      showToast('promiseS', 'authenticating...', id);
-      setTimeout(async () => {
-        setToken('19292');
-        // const resProfile = await profileRequest();
-        // setProfile(resProfile)
-        setProfile({
-          id: 1,
-          name: 'Jhon Doe',
-        });
-        // localStorage.setItem('token', data.token);
-        router.push('/');
-      }, 2000);
-    } catch (error) {
-      const { data } = error.response;
-      showToast('promiseE', `${data}`, id);
-    }
+    const res = await loginRequest(values);
+    renderToast(id, res.type, res.message);
   };
 
-  const loginWorkerFunction = async (values) => {
-    const id = toast.loading('Loading...');
-    try {
-      // const { data } = await loginWorker(values);
-      showToast('promiseS', 'authenticating...', id);
+  const renderToast = (id, type, message) => {
+    if (type === 'error') {
+      showToast('promise_error', message, id);
+    } else {
+      showToast('promise_success', message, id);
       setTimeout(() => {
-        // localStorage.setItem('token', data.token);
         router.push('/');
-      }, 2000);
-    } catch (error) {
-      const { data } = error.response;
-      showToast('promiseE', `${data}`, id);
+      }, 2500);
     }
   };
-
-  useEffect(() => {
-    const changeTypeUserOfFormik = () => {
-      if (typeUser.value) {
-        formik.setFieldValue('typeUser', typeUser.value);
-      }
-    };
-    changeTypeUserOfFormik();
-  }, [typeUser]);
 
   return (
     <Fragment>
@@ -105,19 +56,6 @@ const Login = () => {
               className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
               onSubmit={formik.handleSubmit}
             >
-              <div className='mb-4'>
-                <label
-                  className='block text-gray-700 text-sm font-bold mb-2'
-                  htmlFor='typeUser'
-                >
-                  Type of User
-                </label>
-
-                <div>
-                  <SelectUser />
-                </div>
-              </div>
-
               {formik.touched.typeUser && formik.errors.typeUser ? (
                 <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                   <p className='font-bold'>Error</p>
