@@ -1,43 +1,53 @@
 import { useAuthStore } from '@/src/store/auth';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { toast } from 'react-toastify';
+import { logout } from '../api/auth';
 import showToast from './Toast';
-
 const Header = () => {
-  const logout = useAuthStore((state) => state.logout);
-  const profile = useAuthStore((state) => state.profile);
   const router = useRouter();
-  const { name } = { name: 'Test Name' };
+  const isAuthenticated = useAuthStore.getState().isAuthenticated;
 
   const handleLogout = async () => {
-    const id = toast.loading('Loading...');
-    try {
-      // const {data} = await logoutUser();
-      // console.log(res);
-      showToast('promiseS', `Logout`, id);
-      setTimeout(() => {
-        logout();
-        router.push('/login');
-      }, 2000);
-    } catch (error) {
-      const res = error.response;
-      console.log(res);
-      // showToast('promiseE', `${data}`, id);
-    }
+    logout();
+    router.push('/login');
   };
 
-  return (
-    <div className='sm:flex sm:justify-between mb-6'>
-      <p className='mr-2 mb-5 lg:mb-0'>Hola</p>
-
+  const guestLinks = () => (
+    <div className='flex justify-end grow space-x-10 h-full '>
       <button
-        onClick={() => handleLogout()}
+        onClick={() => router.push('/login')}
         type='button'
         className='bg-blue-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
       >
+        Login
+      </button>
+      <button
+        onClick={() => router.push('/register')}
+        type='button'
+        className='bg-blue-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
+      >
+        Sign Up
+      </button>
+    </div>
+  );
+
+  const authLinks = () => (
+    <div className='flex justify-end grow space-x-10 h-full '>
+      <button
+        onClick={() => handleLogout()}
+        type='button'
+        className='bg-red-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
+      >
         Logout
       </button>
+    </div>
+  );
+
+  return (
+    <div className='sm:flex sm:justify-between sm:items-end mb-6 sm:h-7'>
+      <p className='mr-2 mb-5 lg:mb-0'>Hola</p>
+      {isAuthenticated ? authLinks() : guestLinks()}
     </div>
   );
 };

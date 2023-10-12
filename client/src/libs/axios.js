@@ -24,6 +24,7 @@ export const apiWithoutAutorization = axios.create({
 apiWithoutAutorization.interceptors.request.use(config => {
   config.headers = {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   }
   return config
 })

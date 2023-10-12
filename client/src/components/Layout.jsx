@@ -2,13 +2,17 @@ import { useRouter } from 'next/router';
 import React, { Fragment, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { checkAuthenticated, load_user } from '../api/auth';
 import Header from './Header';
-import PrivateRoute from './PrivateRoute';
 import Sidebar from './Sidebar';
 
 const Layout = ({ children }) => {
-  // Routing hook
   const router = useRouter();
+
+  useEffect(() => {
+    checkAuthenticated();
+    load_user();
+  }, []);
 
   return (
     <Fragment>
@@ -49,7 +53,7 @@ const Layout = ({ children }) => {
                 theme='dark'
               />
               <Header />
-              <PrivateRoute>{children}</PrivateRoute>
+              {children}
             </main>
           </div>
         </div>
