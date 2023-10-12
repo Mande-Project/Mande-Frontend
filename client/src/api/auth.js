@@ -3,8 +3,7 @@ import { useAuthStore } from "../store/auth";
 
 const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser } = useAuthStore.getState();
 
-export const checkAuthenticated = async () => {
-  const access = useAuthStore.getState().access
+export const checkAuthenticated = async (access) => {
 
   if (access) {
     const body = JSON.stringify({ token: access })
@@ -24,8 +23,7 @@ export const checkAuthenticated = async () => {
   }
 }
 
-export const load_user = async () => {
-  const access = useAuthStore.getState().access
+export const load_user = async (access) => {
   if (access) {
     try {
       const res = await apiWithAutorization.get("api_users/users/me/")
@@ -42,7 +40,8 @@ export const loginRequest = async (body) => {
   try {
     const res = await apiWithoutAutorization.post("api_users/auth/jwt/create/", body)
     loginSuccess(res.data)
-    load_user()
+    const access = res.data.access
+    load_user(access)
     return { type: 'success', message: 'Accessing...' }
   } catch (err) {
     loginFail()

@@ -1,17 +1,22 @@
 import { useRouter } from 'next/router';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { checkAuthenticated, load_user } from '../api/auth';
+import { useAuthStore } from '../store/auth';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 
 const Layout = ({ children }) => {
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    checkAuthenticated();
-    load_user();
+    const access = useAuthStore.getState().access;
+    checkAuthenticated(access);
+    load_user(access);
+    setHydrated(true);
   }, []);
 
   return (
@@ -35,28 +40,34 @@ const Layout = ({ children }) => {
           </div>
         </div>
       ) : (
-        <div className='bg-gray-200 min-h-screen'>
-          <div className='flex min-h-screen'>
-            <Sidebar />
+        <>
+          {!hydrated ? (
+            <Spinner />
+          ) : (
+            <div className='bg-gray-200 min-h-screen'>
+              <div className='flex min-h-screen'>
+                <Sidebar />
 
-            <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
-              <ToastContainer
-                position='top-right'
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss={false}
-                draggable
-                pauseOnHover
-                theme='dark'
-              />
-              <Header />
-              {children}
-            </main>
-          </div>
-        </div>
+                <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
+                  <ToastContainer
+                    position='top-right'
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover
+                    theme='dark'
+                  />
+                  <Header />
+                  {children}
+                </main>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </Fragment>
   );
