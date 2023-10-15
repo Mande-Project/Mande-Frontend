@@ -12,11 +12,6 @@ import { useAuthStore } from '../store/auth';
 
 const Login = () => {
   const router = useRouter();
-  const isAuthenticated = useAuthStore.getState().isAuthenticated;
-
-  if (isAuthenticated) {
-    router.push('/');
-  }
 
   const formik = useFormik({
     initialValues: {

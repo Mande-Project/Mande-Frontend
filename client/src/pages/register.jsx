@@ -8,24 +8,28 @@ import { useRouter } from 'next/router';
 import React, { Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import { signupRequest } from '../api/auth';
+import { useAuthStore } from '../store/auth';
 
 const Register = () => {
   const router = useRouter();
 
-  const [typeUser, SelectUser] = useSelect('', typeOfUsers);
+  const [role, SelectUser] = useSelect('', typeOfUsers);
   const [toSecPart, setToSecPart] = useState(false);
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
 
   // Formik
   const formik = useFormik({
     initialValues: {
-      typeUser: '',
+      email: '',
       first_name: '',
       last_name: '',
-      email: '',
-      password: '',
       phone: '',
+      role: '',
+      password: '',
+      re_password: '',
       residenceAddress: '',
     },
     validationSchema: Yup.object({
@@ -44,9 +48,19 @@ const Register = () => {
         )
         .required('Email is required'),
       password: Yup.string()
-        .min(5, 'The password must not at least 5 characters')
+        .min(8, 'The password must not at least 8 characters')
         .max(60, 'The password must not have over 60 characters')
+        .test(
+          'numeric-password',
+          'This password is entirely numeric.',
+          (value) => {
+            return !/^\d+$/.test(value);
+          },
+        )
         .required('The password is required'),
+      re_password: Yup.string()
+        .required('The password confirmation is required')
+        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
       phone: Yup.string()
         .matches(/^[0-9]+$/, 'phone must contain only numbers')
         .min(7, 'Phone number must have at least 7 numbers')
@@ -56,68 +70,95 @@ const Register = () => {
         .min(5, 'Residence address must have at least 5 characters')
         .max(50, 'Residence address must not have over 50 characters')
         .required('Residence address is required'),
-      typeUser: Yup.string().required('You need to choose a type of user'),
+      role: Yup.string().required('You need to choose a type of user'),
     }),
     onSubmit: (values) => {
-      const { first_name, last_name, typeUser } = values;
+      const { first_name, last_name, role } = values;
       values.username = `${first_name}_${last_name}`;
 
-      if (typeUser === 'CLIENT') {
-        registerClientFunction(values);
-      } else if (typeUser === 'WORKER') {
-        registerWorkerFunction(values);
-      } else {
-        showToast('error', 'Typer of user unknown');
-      }
+      handleSignUp(values);
     },
   });
 
-  const registerClientFunction = async (values) => {
+
+  const handleSignUp = async (values) => {
     const id = toast.loading('Loading...');
-    try {
-      const { data } = await registerClient(values);
-      showToast('promiseS', `${data}`, id);
+    const res = await signupRequest(values);
+    renderToast(id, res.type, res.message);
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
+    if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/login');
+        router.push('/');
       }, 2000);
-    } catch (error) {
-      const { data } = error.response;
-      showToast('promiseE', `${data}`, id);
     }
   };
 
-  const registerWorkerFunction = async (values) => {
-    const id = toast.loading('Loading...');
-    try {
-      const { data } = await registerWorker(values);
-      showToast('promiseS', `${data}`, id);
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
-    } catch (error) {
-      const { data } = error.response;
-      showToast('promiseE', `${data}`, id);
+  const renderToast = (id, type, message) => {
+    if (type === 'error') {
+      showToast('promise_error', message, id);
+    } else {
+      setAccountCreated(true);
+      showToast('promise_success', message, id);
     }
   };
+
+  if (accountCreated) {
+    setTimeout(() => {
+      router.push('/login');
+    }, 3000);
+  }
+  //
+  //   const registerClientFunction = async (values) => {
+  //     const id = toast.loading('Loading...');
+  //     try {
+  //       const { data } = await registerClient(values);
+  //       showToast('promiseS', `${data}`, id);
+  //       setTimeout(() => {
+  //         router.push('/login');
+  //       }, 2000);
+  //     } catch (error) {
+  //       const { data } = error.response;
+  //       showToast('promiseE', `${data}`, id);
+  //     }
+  //   };
+  //
+  //   const registerWorkerFunction = async (values) => {
+  //     const id = toast.loading('Loading...');
+  //     try {
+  //       const { data } = await registerWorker(values);
+  //       showToast('promiseS', `${data}`, id);
+  //       setTimeout(() => {
+  //         router.push('/login');
+  //       }, 2000);
+  //     } catch (error) {
+  //       const { data } = error.response;
+  //       showToast('promiseE', `${data}`, id);
+  //     }
+  //   };
 
   useEffect(() => {
     const changeTypeUserOfFormik = () => {
-      if (typeUser.value) {
-        formik.setFieldValue('typeUser', typeUser.value);
+      if (role.value) {
+        formik.setFieldValue('role', role.value);
       }
     };
     changeTypeUserOfFormik();
 
     const handleFormikErrorsChange = () => {
-      const { typeUser, first_name, last_name, email, password } =
+      const { role, first_name, last_name, email, password, re_password } =
         formik.errors;
       setIsValidFirstPart(
-        !typeUser && !email && !password && !first_name && !last_name,
+        !role &&
+          !email &&
+          !password &&
+          !re_password &&
+          !first_name &&
+          !last_name,
       );
     };
 
     handleFormikErrorsChange();
-  }, [typeUser, formik.errors]);
+  }, [role, formik.errors]);
 
   const handleToSecondPart = (e) => {
     e.preventDefault();
@@ -142,7 +183,7 @@ const Register = () => {
               <div className='mb-4'>
                 <label
                   className='block text-gray-700 text-sm font-bold mb-2'
-                  htmlFor='typeUser'
+                  htmlFor='role'
                 >
                   Type of User
                 </label>
@@ -152,14 +193,14 @@ const Register = () => {
                 </div>
               </div>
 
-              {formik.touched.typeUser && formik.errors.typeUser ? (
+              {formik.touched.role && formik.errors.role ? (
                 <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
                   <p className='font-bold'>Error</p>
-                  <p>{formik.errors.typeUser}</p>
+                  <p>{formik.errors.role}</p>
                 </div>
               ) : null}
 
-              {formik.values.typeUser && (
+              {formik.values.role && (
                 <>
                   <div className='mb-4'>
                     <label
@@ -268,10 +309,37 @@ const Register = () => {
                       <p>{formik.errors.password}</p>
                     </div>
                   ) : null}
+
+                  <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='re_password'
+                    >
+                      Confirm Password
+                    </label>
+
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='re_password'
+                      type='password'
+                      placeholder='Confirm Password'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.re_password}
+                    />
+                  </div>
+
+                  {(formik.touched.re_password && formik.errors.re_password) ||
+                  (tryToPass && formik.errors.re_password) ? (
+                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                      <p className='font-bold'>Error</p>
+                      <p>{formik.errors.re_password}</p>
+                    </div>
+                  ) : null}
                 </>
               )}
 
-              {!toSecPart && formik.values.typeUser && (
+              {!toSecPart && formik.values.role && (
                 <button
                   className='bg-gray-800 text-center w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
                   value='Continue'
@@ -281,7 +349,7 @@ const Register = () => {
                 </button>
               )}
 
-              {(!formik.values.typeUser || !toSecPart) && (
+              {(!formik.values.role || !toSecPart) && (
                 <div className='w-full mt-5 p-1 text-center'>
                   <p className='block text-gray-700 text-[1.1rem] font-bold'>
                     Already have an{' '}
@@ -295,7 +363,7 @@ const Register = () => {
           </div>
         </div>
 
-        {formik.values.typeUser && toSecPart && (
+        {formik.values.role && toSecPart && (
           <div className='flex justify-center mt-5 ml-10'>
             <div className='w-full max-w-sm'>
               <form

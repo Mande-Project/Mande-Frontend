@@ -16,6 +16,13 @@ export const useAuthStore = create(devtools(persist((set, get) => ({
 
   userLoadedSuccess: (payload) => set((state) => ({ user: payload })),
 
+  signupSuccess: (payload) => set((state) => ({
+    isAuthenticated: false
+  })),
+
+  activationSuccess: (payload) => set((state) => ({
+  })),
+
   userLoadedFail: () => set((state) => ({ user: null })),
 
   loginFail: () => set((state) => ({
@@ -25,9 +32,15 @@ export const useAuthStore = create(devtools(persist((set, get) => ({
     user: null
   })),
 
+  signupFail: () => set((state) => ({
+  })),
+
+  activationFail: () => set((state) => ({
+  })),
+
   authenticatedSuccess: () => set((state) => ({ isAuthenticated: true })),
 
-  authenticatedFail: () => set((state) => ({ isAuthenticated: false})),
+  authenticatedFail: () => set((state) => ({ isAuthenticated: false })),
 
   logoutUser: () => set((state) => ({
     access: null,

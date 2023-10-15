@@ -21,7 +21,9 @@ const Layout = ({ children }) => {
 
   return (
     <Fragment>
-      {router.pathname === '/login' || router.pathname === '/register' ? (
+      {router.pathname === '/login' ||
+      router.pathname === '/register' ||
+      router.pathname.startsWith('/activate/') ? (
         <div className='bg-gray-800 min-h-screen flex flex-col justify-center'>
           <div>
             <ToastContainer
