@@ -50,7 +50,7 @@ const showToast = (type, message, idPromise, position) => {
         theme: 'dark',
       });
       break;
-    case 'promiseS':
+    case 'promise_success':
       toast.update(idPromise, {
         render: `${message}`,
         type: 'success',
@@ -66,13 +66,25 @@ const showToast = (type, message, idPromise, position) => {
       });
       break;
 
-    case 'promiseE':
+    case 'promise_error':
       toast.update(idPromise, {
         render: `${message}`,
         type: 'error',
         isLoading: false,
         // position: 'top-right',
         position: position || 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+      break;
+    default:
+      toast.error(message, {
+        position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,

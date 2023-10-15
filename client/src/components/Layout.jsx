@@ -1,37 +1,29 @@
-import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'next/router';
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { checkAuthenticated, load_user } from '../api/auth';
+import { useAuthStore } from '../store/auth';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import Spinner from './Spinner';
 
 const Layout = ({ children }) => {
-  const isAuth = useAuthStore((state) => state.isAuth);
-
-  // Routing hook
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (
-      !isAuth &&
-      router.pathname !== '/login' &&
-      router.pathname !== '/register'
-    ) {
-      router.push('/login');
-    }
-
-    if (
-      isAuth &&
-      (router.pathname === '/login' || router.pathname !== '/register')
-    ) {
-      router.push('/');
-    }
-  }, [isAuth, router.pathname]);
+    const access = useAuthStore.getState().access;
+    checkAuthenticated(access);
+    load_user(access);
+    setHydrated(true);
+  }, []);
 
   return (
     <Fragment>
-      {router.pathname === '/login' || router.pathname === '/register' ? (
+      {router.pathname === '/login' ||
+      router.pathname === '/register' ||
+      router.pathname.startsWith('/activate/') ? (
         <div className='bg-gray-800 min-h-screen flex flex-col justify-center'>
           <div>
             <ToastContainer
@@ -51,7 +43,9 @@ const Layout = ({ children }) => {
         </div>
       ) : (
         <>
-          {isAuth ? (
+          {!hydrated ? (
+            <Spinner />
+          ) : (
             <div className='bg-gray-200 min-h-screen'>
               <div className='flex min-h-screen'>
                 <Sidebar />
@@ -74,8 +68,6 @@ const Layout = ({ children }) => {
                 </main>
               </div>
             </div>
-          ) : (
-            <p>You don't have the credentials</p>
           )}
         </>
       )}

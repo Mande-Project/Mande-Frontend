@@ -12,7 +12,6 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
           />
-          <script src="https://cdn.tailwindcss.com"></script>
         </Head>
         <body>
           <Main />

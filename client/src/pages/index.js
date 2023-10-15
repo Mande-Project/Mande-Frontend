@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout';
+import Layout from '@/src/components/Layout';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
