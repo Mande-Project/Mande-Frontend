@@ -12,7 +12,7 @@ const ActivateAccount = () => {
 
   if (verified) {
     setTimeout(() => {
-      router.push('/');
+      router.push('/login');
     }, 2000);
   }
 
