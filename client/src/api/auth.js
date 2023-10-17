@@ -83,14 +83,19 @@ export const signupRequest = async (body) => {
 export const verify = async (uid, token) => {
   const body = JSON.stringify({ uid, token })
   try {
+    console.log(body)
     await apiWithoutAutorization.post("api_users/auth/users/activation/", body)
-    activationSucess()
+    // activationSucess()
     return { type: 'success', message: 'The user was activated' }
   } catch (err) {
-    activationFail()
+    // activationFail()
+    if (err.response.data.detail) {
+      const message = err.response.data.detail;
+      return { type: 'error', message };
+    }
     const message = `An error ocurred`;
-    // console.log(err)
     return { type: 'error', message };
+    // console.log(err)
   }
 }
 

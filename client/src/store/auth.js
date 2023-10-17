@@ -20,7 +20,7 @@ export const useAuthStore = create(devtools(persist((set, get) => ({
     isAuthenticated: false
   })),
 
-  activationSuccess: (payload) => set((state) => ({
+  activationSuccess: () => set((state) => ({
   })),
 
   userLoadedFail: () => set((state) => ({ user: null })),
