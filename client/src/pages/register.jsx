@@ -1,10 +1,10 @@
 import Layout from '@/src/components/Layout';
 import showToast from '@/src/components/Toast';
 import useSelect from '@/src/hooks/useSelect';
-import { methodType, typeOfUsers } from '@/src/utils';
+import { typeOfUsers } from '@/src/utils';
 import { useFormik } from 'formik';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
@@ -19,6 +19,8 @@ const Register = () => {
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
+  const [isLocated, setIsLocated] = useState(false);
+  const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
   // Formik
   const formik = useFormik({
@@ -31,6 +33,8 @@ const Register = () => {
       password: '',
       re_password: '',
       residenceAddress: '',
+      latitude: '',
+      longitude: '',
     },
     validationSchema: Yup.object({
       first_name: Yup.string()
@@ -66,20 +70,64 @@ const Register = () => {
         .min(7, 'Phone number must have at least 7 numbers')
         .max(10, 'Phone number must not have over 10 numbers')
         .required('Phone number is required'),
-      residenceAddress: Yup.string()
-        .min(5, 'Residence address must have at least 5 characters')
-        .max(50, 'Residence address must not have over 50 characters')
-        .required('Residence address is required'),
+      // residenceAddress: Yup.string()
+      //   .min(5, 'Residence address must have at least 5 characters')
+      //   .max(50, 'Residence address must not have over 50 characters')
+      //   .required('Residence address is required'),
       role: Yup.string().required('You need to choose a type of user'),
     }),
     onSubmit: (values) => {
-      const { first_name, last_name, role } = values;
+      const { first_name, last_name } = values;
       values.username = `${first_name}_${last_name}`;
+
+      if (!isLocated) {
+        if (values.residenceAddress === '') {
+          showToast('warning', 'You have to put your location manually');
+          return;
+        }
+      }
 
       handleSignUp(values);
     },
   });
 
+  const success = (pos) => {
+    var crd = pos.coords;
+    console.log('Your current position is:');
+    formik.setFieldValue('latitude', crd.latitude);
+    formik.setFieldValue('longitude', crd.longitude);
+    showToast('success', 'Your location has been set');
+    setIsLocated(true);
+  };
+
+  function errors() {
+    showToast('warning', 'You have to put your location manually');
+  }
+
+  const locateUser = () => {
+    if (navigator.geolocation) {
+      navigator.permissions
+        .query({ name: 'geolocation' })
+        .then(function (result) {
+          if (result.state === 'granted') {
+            navigator.geolocation.getCurrentPosition(success, errors, options);
+          } else if (result.state === 'prompt') {
+            navigator.geolocation.getCurrentPosition(success, errors, options);
+          } else if (result.state === 'denied') {
+            showToast('warning', 'Please enable location to use this app');
+          }
+        });
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  };
+
+  useEffect(() => {
+    console.log(isLocated);
+    if (!isLocated) {
+      locateUser();
+    }
+  }, []);
 
   const handleSignUp = async (values) => {
     const id = toast.loading('Loading...');
@@ -107,34 +155,6 @@ const Register = () => {
       router.push('/login');
     }, 3000);
   }
-  //
-  //   const registerClientFunction = async (values) => {
-  //     const id = toast.loading('Loading...');
-  //     try {
-  //       const { data } = await registerClient(values);
-  //       showToast('promiseS', `${data}`, id);
-  //       setTimeout(() => {
-  //         router.push('/login');
-  //       }, 2000);
-  //     } catch (error) {
-  //       const { data } = error.response;
-  //       showToast('promiseE', `${data}`, id);
-  //     }
-  //   };
-  //
-  //   const registerWorkerFunction = async (values) => {
-  //     const id = toast.loading('Loading...');
-  //     try {
-  //       const { data } = await registerWorker(values);
-  //       showToast('promiseS', `${data}`, id);
-  //       setTimeout(() => {
-  //         router.push('/login');
-  //       }, 2000);
-  //     } catch (error) {
-  //       const { data } = error.response;
-  //       showToast('promiseE', `${data}`, id);
-  //     }
-  //   };
 
   useEffect(() => {
     const changeTypeUserOfFormik = () => {
@@ -173,7 +193,7 @@ const Register = () => {
     <Layout>
       <h1 className='text-center text-2xl text-white font-light'>Register</h1>
 
-      <div className='flex flex-row flex-wrap justify-center'>
+      <div className='flex flex-row flex-wrap justify-center w-full h-full'>
         <div className='flex justify-center mt-5 '>
           <div className='w-full max-w-sm'>
             <form
@@ -397,32 +417,26 @@ const Register = () => {
                   </div>
                 ) : null}
 
-                <div className='mb-4'>
-                  <label
-                    className='block text-gray-700 text-sm font-bold mb-2'
-                    htmlFor='residenceAddress'
-                  >
-                    Residence Address
-                  </label>
+                {!isLocated && (
+                  <div className='mb-4'>
+                    <label
+                      className='block text-gray-700 text-sm font-bold mb-2'
+                      htmlFor='residenceAddress'
+                    >
+                      Residence Address
+                    </label>
 
-                  <input
-                    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                    id='residenceAddress'
-                    type='text'
-                    placeholder='User recidence address'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.residenceAddress}
-                  />
-                </div>
-
-                {formik.touched.residenceAddress &&
-                formik.errors.residenceAddress ? (
-                  <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                    <p className='font-bold'>Error</p>
-                    <p>{formik.errors.residenceAddress}</p>
+                    <input
+                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      id='residenceAddress'
+                      type='text'
+                      placeholder='User recidence address'
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.residenceAddress}
+                    />
                   </div>
-                ) : null}
+                )}
 
                 <input
                   type='submit'

@@ -2,7 +2,9 @@ import { useAuthStore } from '@/src/store/auth';
 import axios from 'axios';
 
 export const apiWithAutorization = axios.create({
-  baseURL: 'http://localhost:8000/',
+  // baseURL: 'http://localhost:8000/',
+  // eslint-disable-next-line no-undef
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
 })
 
 apiWithAutorization.interceptors.request.use(config => {
@@ -17,8 +19,9 @@ apiWithAutorization.interceptors.request.use(config => {
 
 
 export const apiWithoutAutorization = axios.create({
-  baseURL: 'http://localhost:8000/',
-  // baseURL: `${process.env.REACT_APP_API_URL}`,
+  // baseURL: 'http://localhost:8000/',
+  // eslint-disable-next-line no-undef
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
 })
 
 apiWithoutAutorization.interceptors.request.use(config => {

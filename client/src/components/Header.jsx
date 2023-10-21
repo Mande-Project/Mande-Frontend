@@ -1,9 +1,7 @@
 import { useAuthStore } from '@/src/store/auth';
-import { useRouter } from 'next/router';
-import React, { Fragment } from 'react';
-import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { logout } from '../api/auth';
-import showToast from './Toast';
 const Header = () => {
   const router = useRouter();
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
