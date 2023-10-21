@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/src/store/auth';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { logout } from '../api/auth';
 const Header = () => {

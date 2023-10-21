@@ -7,7 +7,6 @@ const Index = () => {
     <>
       <Layout>
         <h1 className="text-2xl text-gray-800 font-light">Dashboard</h1>
-
       </Layout>
     </>
   );

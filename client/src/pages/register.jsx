@@ -4,7 +4,7 @@ import useSelect from '@/src/hooks/useSelect';
 import { typeOfUsers } from '@/src/utils';
 import { useFormik } from 'formik';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
@@ -77,7 +77,7 @@ const Register = () => {
       role: Yup.string().required('You need to choose a type of user'),
     }),
     onSubmit: (values) => {
-      const { first_name, last_name} = values;
+      const { first_name, last_name } = values;
       values.username = `${first_name}_${last_name}`;
 
       if (!isLocated) {

@@ -8,7 +8,6 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
 
-
 // eslint-disable-next-line react/prop-types
 const Layout = ({ children }) => {
   const router = useRouter();
