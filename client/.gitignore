@@ -34,5 +34,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Vscode
-.vscode/
+.vscode
+
+info.md
+structPR.md
