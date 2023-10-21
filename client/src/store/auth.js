@@ -1,8 +1,8 @@
-import axios from '@/src/libs/axios';
+/* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-export const useAuthStore = create(devtools(persist((set, get) => ({
+export const useAuthStore = create(devtools(persist((set) => ({
   access: null,
   refresh: null,
   user: null,

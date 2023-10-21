@@ -1,7 +1,9 @@
 import Head from "next/head";
-import Layout from "../components/Layout";
+import React from 'react';
+import '../css/spinner.css';
 import './index.css';
 
+// eslint-disable-next-line react/prop-types
 const MyApp = ({ Component, pageProps }) => {
   return (
     <>

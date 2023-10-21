@@ -1,7 +1,7 @@
 import { apiWithAutorization, apiWithoutAutorization } from "../libs/axios";
 import { useAuthStore } from "../store/auth";
 
-const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail, activationSucess, activationFail } = useAuthStore.getState();
+const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail,  } = useAuthStore.getState();
 
 export const checkAuthenticated = async (access) => {
 
