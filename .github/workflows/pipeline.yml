@@ -21,8 +21,14 @@ jobs:
         with:
           node-version: '14'
       - name: Checkout to client directory
-        run: cd client
+        run: |
+          cd client
+          tree
       - name: Install dependencies
-        run: npm install
+        run: |
+          tree
+          npm install
       - name: Lint 
-        run: npm run lint
+        run: |
+          tree
+          npm run lint
