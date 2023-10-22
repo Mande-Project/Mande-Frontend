@@ -2,9 +2,9 @@ name: Deployment Pipeline
 
 on:
   push:
-    branches: [main, releases]
+    branches: [main, releases, develop]
   pull_request:
-    branches: [main, releases]
+    branches: [main, releases, develop]
     types: [opened, synchronize]
 
 jobs:
@@ -28,6 +28,7 @@ jobs:
         working-directory: ./client
         run: npm run lint
       - name: Build
+        if: ${{github.event.ref != 'refs/heads/develop'}}
         working-directory: ./client
         run: npm run build
       - name: Test
