@@ -11,6 +11,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Redundant Build
+        uses: styfle/cancel-workflow-action
+        with:
+          access_token: ${{github.token}}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -29,3 +33,7 @@ jobs:
       - name: Test
         working-directory: ./client
         run: npm run test
+      # - name: Deploy to
+      #   if: ${{ github.event_name == 'push' }}
+      #   uses:
+      #   with:
