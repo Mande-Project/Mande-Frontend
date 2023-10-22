@@ -71,4 +71,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - With this command you can down the image from production and delete it.
   - `docker-compose -f docker-compose.production.yml down --volumes`
 
+#### Run the docker image from Docker Hub
+- You have to run the following command:
+  - `sudo docker run --name mande-project -d -p 3000:3000 carlosher07/mande-react-app:latest`
+- Then, you can see the container running with the following command:
+  - `docker ps`
+- To stop the container you have to run the following command:
+  - `docker stop mande-project`
+
 ## Members

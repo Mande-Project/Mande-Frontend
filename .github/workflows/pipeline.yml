@@ -100,10 +100,6 @@ jobs:
           username: ${{ secrets.REACTUSERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: See files
-        if: ${{github.ref == 'refs/heads/main' }}
-        run: ls -la
-
       - name: Build and push
         if: ${{github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v2
