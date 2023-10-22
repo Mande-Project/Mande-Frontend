@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: ./
+      target: runner
+    volumes:
+      - .:/app
+      - /app/.next  a
+    command: sh -c "npm run dev && chown -R nextjs:nodejs /app/.next"
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development

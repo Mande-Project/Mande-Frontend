@@ -1,0 +1,102 @@
+name: Deployment Pipeline
+
+env:
+  VERCEl_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+on:
+  push:
+    branches: [main, releases, develop]
+  pull_request:
+    branches: [main, releases, develop]
+    types: [opened, synchronize]
+
+jobs:
+  avoid_reduncy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Redundant Builds
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{github.token}}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Lint
+        working-directory: ./client
+        run: npm run lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Build
+        working-directory: ./client
+        run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nextjs-build
+          path: ./client/.next
+
+  tests:
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - uses: actions/download-artifact@v3
+        with:
+          name: nextjs-build
+          path: ./client/.next
+      - name: Test
+        working-directory: ./client
+        run: npm run test
+
+  deploy:
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install Vercel CLI
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: npm install --global vercel
+      
+      - name: Pull Vercel Environment Information
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: vercel pull --yes --environment=production --token=${{secrets.VERCEL_TOKEN}}
+
+      - name: Build Project Artifacts
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: vercel build --prod --token=${{secrets.VERCEl_TOKEN}}
+
+      - name: Deploy Project Artifacts
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: vercel deploy --prebuilt --prod --token=${{secrets.VERCEL_TOKEN}}
