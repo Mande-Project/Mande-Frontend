@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start-test": "next dev -e test",
     "lint": "next lint",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "prettier --write --ignore-path .gitignore .",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "npx cypress run"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",
