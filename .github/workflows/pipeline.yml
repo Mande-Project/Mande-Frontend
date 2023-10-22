@@ -20,7 +20,7 @@ jobs:
         with:
           access_token: ${{github.token}}
 
-  lint:
+  install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +28,22 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
+          cache: 'npm'
+          node-version: '16'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+  lint:
+    needs: [install]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
           node-version: '16'
       - name: Install dependencies
         working-directory: ./client
@@ -37,6 +53,7 @@ jobs:
         run: npm run lint
 
   build:
+    needs: [install]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +61,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
+          cache: 'npm'
           node-version: '16'
       - name: Install dependencies
         working-directory: ./client
@@ -65,6 +83,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
+          cache: 'npm'
           node-version: '16'
       - name: Install dependencies
         working-directory: ./client
