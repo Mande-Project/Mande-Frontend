@@ -4,7 +4,7 @@ import Index from "@/src/pages";
 import { render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom';
 
-jest.mock('../components/Layout.jsx', () => ({
+jest.mock('../src/components/Layout.jsx', () => ({
   __esModule: true,
   default: ({ children }) => <div>{children}</div>,
 }));

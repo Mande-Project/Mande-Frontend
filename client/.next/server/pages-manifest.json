@@ -1,1 +1,10 @@
-{}
+{
+  "/_document": "pages/_document.js",
+  "/_app": "pages/_app.js",
+  "/activate/[uid]/[token]": "pages/activate/[uid]/[token].html",
+  "/": "pages/index.html",
+  "/register": "pages/register.html",
+  "/login": "pages/login.html",
+  "/_error": "pages/_error.js",
+  "/404": "pages/404.html"
+}
