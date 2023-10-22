@@ -1,4 +1,3 @@
-import { loginRequest } from '@/src/api/auth';
 import Layout from '@/src/components/Layout';
 import showToast from '@/src/components/Toast';
 import { useFormik } from 'formik';
@@ -8,6 +7,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useAuthStore } from '../store/auth';
+import { loginRequest } from '../api/auth';
 
 const Login = () => {
   const router = useRouter();
@@ -50,16 +50,16 @@ const Login = () => {
 
   return (
     <Layout>
-      <h1 className='text-center text-2xl text-white font-light'>Login</h1>
+      <h1 className='text-center text-2xl font-light text-white'>Login</h1>
 
-      <div className='flex justify-center mt-5'>
+      <div className='mt-5 flex justify-center'>
         <div className='w-full max-w-sm'>
           <form
-            className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
+            className='mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md'
             onSubmit={formik.handleSubmit}
           >
             {formik.touched.typeUser && formik.errors.typeUser ? (
-              <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
                 <p className='font-bold'>Error</p>
                 <p>{formik.errors.typeUser}</p>
               </div>
@@ -67,14 +67,14 @@ const Login = () => {
 
             <div className='mb-4'>
               <label
-                className='block text-gray-700 text-sm font-bold mb-2'
+                className='mb-2 block text-sm font-bold text-gray-700'
                 htmlFor='email'
               >
                 Email
               </label>
 
               <input
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                 id='email'
                 type='email'
                 placeholder='User Email'
@@ -85,7 +85,7 @@ const Login = () => {
             </div>
 
             {formik.touched.email && formik.errors.email ? (
-              <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
                 <p className='font-bold'>Error</p>
                 <p>{formik.errors.email}</p>
               </div>
@@ -93,14 +93,14 @@ const Login = () => {
 
             <div className='mb-4'>
               <label
-                className='block text-gray-700 text-sm font-bold mb-2'
+                className='mb-2 block text-sm font-bold text-gray-700'
                 htmlFor='password'
               >
                 Password
               </label>
 
               <input
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                 id='password'
                 type='password'
                 placeholder='User Password'
@@ -111,7 +111,7 @@ const Login = () => {
             </div>
 
             {formik.touched.password && formik.errors.password ? (
-              <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
                 <p className='font-bold'>Error</p>
                 <p>{formik.errors.password}</p>
               </div>
@@ -119,12 +119,12 @@ const Login = () => {
 
             <input
               type='submit'
-              className='bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
+              className='uppercas mt-5 w-full bg-gray-800 p-2 text-white hover:cursor-pointer hover:bg-gray-900'
               value='Login'
             />
 
-            <div className='w-full mt-5 p-2 text-center'>
-              <p className='block text-gray-700 text-[1.1rem] font-bold'>
+            <div className='mt-5 w-full p-2 text-center'>
+              <p className='block text-[1.1rem] font-bold text-gray-700'>
                 Do you want to{' '}
                 <Link href='register'>
                   <span className='text-sky-800'>register</span> ?
