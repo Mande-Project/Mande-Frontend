@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from "react";
 import Index from "@/src/pages";
 import { render, screen } from "@testing-library/react";
