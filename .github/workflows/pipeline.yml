@@ -1,0 +1,39 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches: [main, releases]
+  pull_request:
+    branches: [main, releases]
+    types: [opened, synchronize]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Redundant Build
+        uses: styfle/cancel-workflow-action
+        with:
+          access_token: ${{github.token}}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+      - name: Lint
+        working-directory: ./client
+        run: npm run lint
+      - name: Build
+        working-directory: ./client
+        run: npm run build
+      - name: Test
+        working-directory: ./client
+        run: npm run test
+      # - name: Deploy to
+      #   if: ${{ github.event_name == 'push' }}
+      #   uses:
+      #   with:
