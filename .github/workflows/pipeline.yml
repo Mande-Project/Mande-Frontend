@@ -11,8 +11,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Redundant Build
-        uses: styfle/cancel-workflow-action
+      - name: Cancel Previous Redundant Builds
+        uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{github.token}}
       - uses: actions/checkout@v4
