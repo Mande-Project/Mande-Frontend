@@ -2,17 +2,17 @@ name: Deployment Pipeline
 
 on:
   push:
-    branches: [main, releases]
+    branches: [main, releases, develop]
   pull_request:
-    branches: [main, releases]
+    branches: [main, releases, develop]
     types: [opened, synchronize]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Redundant Build
-        uses: styfle/cancel-workflow-action
+      - name: Cancel Previous Redundant Builds
+        uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{github.token}}
       - uses: actions/checkout@v4
@@ -28,6 +28,7 @@ jobs:
         working-directory: ./client
         run: npm run lint
       - name: Build
+        if: ${{github.event.ref != 'refs/heads/develop'}}
         working-directory: ./client
         run: npm run build
       - name: Test
