@@ -55,10 +55,6 @@ jobs:
         with:
           name: nextjs-build
           path: ./client/.next
-      - name: List contents of .next directory
-        run: ls -R ./client/.next
-      - name: List contents of working directory
-        run: ls -R
 
   tests:
     needs: [lint, build]
@@ -73,8 +69,6 @@ jobs:
       - name: Install dependencies
         working-directory: ./client
         run: npm ci
-      - name: List contents of working directory
-        run: ls -R
       - uses: actions/download-artifact@v3
         with:
           name: nextjs-build
