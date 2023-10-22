@@ -25,6 +25,7 @@ jobs:
           cd client
           tree
       - name: Install dependencies
+        working-directory: ./client
         run: |
           tree
           npm install
