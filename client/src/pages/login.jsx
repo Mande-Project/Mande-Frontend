@@ -1,4 +1,3 @@
-import { loginRequest } from '@/src/api/auth';
 import Layout from '@/src/components/Layout';
 import showToast from '@/src/components/Toast';
 import { useFormik } from 'formik';
@@ -8,6 +7,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useAuthStore } from '../store/auth';
+import { loginRequest } from '../api/auth';
 
 const Login = () => {
   const router = useRouter();
