@@ -19,17 +19,12 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
-      - name: Checkout to client directory
-        run: |
-          cd client
-          tree
+          node-version: '16'
       - name: Install dependencies
         working-directory: ./client
         run: |
-          tree
           npm install
-      - name: Lint 
+      - name: Lint
+        working-directory: ./client
         run: |
-          tree
           npm run lint
