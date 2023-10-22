@@ -1,11 +1,10 @@
-name: Deployment Pipeline
+name: Deployment Pipeline in Development
 
 on:
   push:
-    branches: [main, releases]
+    branches: [develop]
   pull_request:
-    branches: [main, releases]
-    types: [opened, synchronize]
+    branches: [develop]
 
 jobs:
   deploy:
@@ -23,9 +22,6 @@ jobs:
       - name: Lint
         working-directory: ./client
         run: npm run lint
-      - name: Build
-        working-directory: ./client
-        run: npm run build
       - name: Test
         working-directory: ./client
         run: npm run test
