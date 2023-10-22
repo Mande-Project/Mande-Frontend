@@ -1,3 +1,5 @@
+name: Deployment Pipeline
+
 on:
   push:
     branches:
@@ -15,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Checkout to client directory
+        run: cd client
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -22,5 +26,3 @@ jobs:
         run: npm install
       - name: Lint 
         run: npm run lint
-
-
