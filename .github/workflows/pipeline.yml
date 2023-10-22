@@ -22,9 +22,13 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         working-directory: ./client
-        run: |
-          npm install
+        run: npm install --no-audit --no-fund --no-optional
       - name: Lint
         working-directory: ./client
-        run: |
-          npm run lint
+        run: npm run lint
+      - name: Build
+        working-directory: ./client
+        run: npm run build
+      - name: Test
+        working-directory: ./client
+        run: npm run test
