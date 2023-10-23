@@ -4,6 +4,7 @@ import showToast from '@/src/components/Toast';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
@@ -50,7 +51,7 @@ const Login = () => {
 
   return (
     <Layout>
-      <h1 className='text-center text-2xl text-white font-light'>Login</h1>
+      <h1 data-testid="login-title" className='text-center text-2xl text-white font-light'>Login</h1>
 
       <div className='flex justify-center mt-5'>
         <div className='w-full max-w-sm'>

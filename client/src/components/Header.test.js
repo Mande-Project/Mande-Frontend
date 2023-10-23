@@ -13,7 +13,6 @@ jest.mock("next/navigation", () => ({
   }
 }));
 
-
 describe('Header component', () => {
   // Establecer el estado de autenticación para las pruebas
   beforeEach(() => {
