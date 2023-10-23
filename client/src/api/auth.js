@@ -45,6 +45,7 @@ export const loginRequest = async (body) => {
     load_user(access)
     return { type: 'success', message: 'Accessing...' }
   } catch (err) {
+    console.log(err)
     loginFail()
     const message = JSON.parse(err.request.response).detail;
     return { type: 'error', message };
