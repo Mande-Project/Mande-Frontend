@@ -37,6 +37,7 @@ export const load_user = async (access) => {
 }
 
 export const loginRequest = async (body) => {
+  console.log(body)
   try {
     const res = await apiWithoutAutorization.post("api_users/auth/jwt/create/", body)
     loginSuccess(res.data)
