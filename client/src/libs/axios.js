@@ -5,7 +5,6 @@ export const apiWithAutorization = axios.create({
   // baseURL: 'http://localhost:8000/',
   // eslint-disable-next-line no-undef
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  withCredentials: true,
 })
 
 apiWithAutorization.interceptors.request.use(config => {
@@ -22,7 +21,6 @@ apiWithAutorization.interceptors.request.use(config => {
 export const apiWithoutAutorization = axios.create({
   // eslint-disable-next-line no-undef
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  withCredentials: true,
 })
 
 apiWithoutAutorization.interceptors.request.use(config => {
