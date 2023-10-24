@@ -93,7 +93,6 @@ const Register = () => {
 
   const success = (pos) => {
     var crd = pos.coords;
-    console.log('Your current position is:');
     formik.setFieldValue('latitude', crd.latitude);
     formik.setFieldValue('longitude', crd.longitude);
     showToast('success', 'Your location has been set');
@@ -124,7 +123,6 @@ const Register = () => {
 
   
   useEffect(() => {
-    console.log(isLocated);
     if (!isLocated) {
       locateUser();
     }

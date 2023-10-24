@@ -29,10 +29,8 @@ const Login = () => {
   });
 
   const handleLogin = async (values) => {
-    console.log(values);
     const id = toast.loading('Loading...');
     const res = await loginRequest(values);
-    console.log(res)
     renderToast(id, res.type, res.message);
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
