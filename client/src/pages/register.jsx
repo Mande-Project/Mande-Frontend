@@ -19,8 +19,6 @@ const Register = () => {
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
-  const [isLocated, setIsLocated] = useState(false);
-  const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
   // Formik
   const formik = useFormik({
@@ -70,63 +68,19 @@ const Register = () => {
         .min(7, 'Phone number must have at least 7 numbers')
         .max(10, 'Phone number must not have over 10 numbers')
         .required('Phone number is required'),
-      // residenceAddress: Yup.string()
-      //   .min(5, 'Residence address must have at least 5 characters')
-      //   .max(50, 'Residence address must not have over 50 characters')
-      //   .required('Residence address is required'),
+      residenceAddress: Yup.string()
+        .min(5, 'Residence address must have at least 5 characters')
+        .max(50, 'Residence address must not have over 50 characters')
+        .required('Residence address is required'),
       role: Yup.string().required('You need to choose a type of user'),
     }),
     onSubmit: (values) => {
       const { first_name, last_name } = values;
       values.username = `${first_name}_${last_name}`;
 
-      if (!isLocated) {
-        if (values.residenceAddress === '') {
-          showToast('warning', 'You have to put your location manually');
-          return;
-        }
-      }
-
       handleSignUp(values);
     },
   });
-
-  const success = (pos) => {
-    var crd = pos.coords;
-    formik.setFieldValue('latitude', crd.latitude);
-    formik.setFieldValue('longitude', crd.longitude);
-    showToast('success', 'Your location has been set');
-    setIsLocated(true);
-  };
-
-  function errors() {
-    showToast('warning', 'You have to put your location manually');
-  }
-
-  const locateUser = () => {
-    if (navigator.geolocation) {
-      navigator.permissions
-        .query({ name: 'geolocation' })
-        .then(function (result) {
-          if (result.state === 'granted') {
-            navigator.geolocation.getCurrentPosition(success, errors, options);
-          } else if (result.state === 'prompt') {
-            navigator.geolocation.getCurrentPosition(success, errors, options);
-          } else if (result.state === 'denied') {
-            showToast('warning', 'Please enable location to use this app');
-          }
-        });
-    } else {
-      console.log('Geolocation is not supported by this browser.');
-    }
-  };
-
-  
-  useEffect(() => {
-    if (!isLocated) {
-      locateUser();
-    }
-  }, []);
 
   const handleSignUp = async (values) => {
     const id = toast.loading('Loading...');
@@ -416,7 +370,6 @@ const Register = () => {
                   </div>
                 ) : null}
 
-                {!isLocated && (
                   <div className='mb-4'>
                     <label
                       className='block text-gray-700 text-sm font-bold mb-2'
@@ -435,7 +388,13 @@ const Register = () => {
                       value={formik.values.residenceAddress}
                     />
                   </div>
-                )}
+
+                  {formik.touched.residenceAddress && formik.errors.residenceAddress ? (
+                  <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
+                    <p className='font-bold'>Error</p>
+                    <p>{formik.errors.residenceAddress}</p>
+                  </div>
+                ) : null}
 
                 <input
                   type='submit'

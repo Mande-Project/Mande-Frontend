@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { useAuthStore } from '../store/auth';
 import { loginRequest } from '../api/auth';
-
 const Login = () => {
   const router = useRouter();
 
