@@ -1,13 +1,13 @@
 import Layout from '@/src/components/Layout';
-import showToast from '@/src/components/Toast';
+import  { renderToast } from '@/src/components/Toast';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
-import { useAuthStore } from '../store/auth';
 import { loginRequest } from '../api/auth';
+import { useAuthStore } from '../store/auth';
+import { LoginValidation } from '../validation/loginValidation';
 const Login = () => {
   const router = useRouter();
 
@@ -16,12 +16,7 @@ const Login = () => {
       email: '',
       password: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Email isn't valid")
-        .required('Email is required'),
-      password: Yup.string().required('The password is required'),
-    }),
+    validationSchema: LoginValidation,
     onSubmit: (values) => {
       handleLogin(values);
     },
@@ -30,20 +25,16 @@ const Login = () => {
   const handleLogin = async (values) => {
     const id = toast.loading('Loading...');
     const res = await loginRequest(values);
-    renderToast(id, res.type, res.message);
+    renderToast(id, res.type, res.message, () => {});
+    checkoutIsAuthenticated();
+  };
+
+  const checkoutIsAuthenticated = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
         router.push('/');
       }, 2000);
-    }
-  };
-
-  const renderToast = (id, type, message) => {
-    if (type === 'error') {
-      showToast('promise_error', message, id);
-    } else {
-      showToast('promise_success', message, id);
     }
   };
 

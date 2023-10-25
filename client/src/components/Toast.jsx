@@ -1,6 +1,16 @@
 import { toast } from 'react-toastify';
 
-const showToast = (type, message, idPromise, position) => {
+
+export const renderToast = (id, type, message, onSucess) => {
+  if (type === 'error') {
+    showToast('promise_error', message, id);
+  } else {
+    onSucess();
+    showToast('promise_success', message, id);
+  }
+};
+
+export const showToast = (type, message, idPromise, position) => {
   switch (type) {
     case 'warning':
       toast.warn(message, {
@@ -96,5 +106,3 @@ const showToast = (type, message, idPromise, position) => {
       break;
   }
 };
-
-export default showToast;
