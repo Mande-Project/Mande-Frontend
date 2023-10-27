@@ -1,11 +1,12 @@
 import Layout from '@/src/components/Layout';
-import  { renderToast } from '@/src/components/Toast';
+import { renderToast } from '@/src/components/Toast';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'react-toastify';
 import { loginRequest } from '../api/auth';
+import ErrorForm from '../components/ErrorForm';
 import { useAuthStore } from '../store/auth';
 import { LoginValidation } from '../validation/loginValidation';
 const Login = () => {
@@ -49,10 +50,7 @@ const Login = () => {
             onSubmit={formik.handleSubmit}
           >
             {formik.touched.typeUser && formik.errors.typeUser ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.typeUser}</p>
-              </div>
+              <ErrorForm description={formik.errors.typeUser} />
             ) : null}
 
             <div className='mb-4'>
@@ -75,10 +73,7 @@ const Login = () => {
             </div>
 
             {formik.touched.email && formik.errors.email ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.email}</p>
-              </div>
+              <ErrorForm description={formik.errors.email} />
             ) : null}
 
             <div className='mb-4'>
@@ -101,10 +96,7 @@ const Login = () => {
             </div>
 
             {formik.touched.password && formik.errors.password ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.password}</p>
-              </div>
+              <ErrorForm description={formik.errors.password} />
             ) : null}
 
             <input

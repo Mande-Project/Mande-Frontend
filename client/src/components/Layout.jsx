@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/auth';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
+import '@radix-ui/themes/styles.css';
 
 // eslint-disable-next-line react/prop-types
 const Layout = ({ children }) => {

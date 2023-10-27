@@ -30,10 +30,9 @@ export const RegisterValidation = Yup.object().shape({
     .required('The password confirmation is required')
     .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   phone: Yup.string()
-    .matches(/^[0-9]+$/, 'phone must contain only numbers')
     .min(7, 'Phone number must have at least 7 numbers')
     .max(10, 'Phone number must not have over 10 numbers')
-    .required('Phone number is required'),
+    .required('Phone number is required and must not contain letters'),
   residenceAddress: Yup.string()
     .min(5, 'Residence address must have at least 5 characters')
     .max(50, 'Residence address must not have over 50 characters')

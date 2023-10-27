@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { signupRequest } from '../api/auth';
+import ErrorForm from '../components/ErrorForm';
 import { useAuthStore } from '../store/auth';
 import { RegisterValidation } from '../validation/registerValidation';
 
@@ -123,13 +124,6 @@ const Register = () => {
                 </div>
               </div>
 
-              {formik.touched.role && formik.errors.role ? (
-                <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                  <p className='font-bold'>Error</p>
-                  <p>{formik.errors.role}</p>
-                </div>
-              ) : null}
-
               {formik.values.role && (
                 <>
                   <div className='mb-4'>
@@ -148,15 +142,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.first_name}
+                      maxLength='30'
                     />
                   </div>
 
                   {(formik.touched.first_name && formik.errors.first_name) ||
                   (tryToPass && formik.errors.first_name) ? (
-                    <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.first_name}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.first_name} />
                   ) : null}
 
                   <div className='mb-4'>
@@ -175,15 +167,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.last_name}
+                      maxLength='30'
                     />
                   </div>
 
                   {(formik.touched.last_name && formik.errors.last_name) ||
                   (tryToPass && formik.errors.last_name) ? (
-                    <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.last_name}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.last_name} />
                   ) : null}
 
                   <div className='mb-4'>
@@ -202,15 +192,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.email}
+                      maxLength='50'
                     />
                   </div>
 
                   {(formik.touched.email && formik.errors.email) ||
                   (tryToPass && formik.errors.email) ? (
-                    <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.email}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.email} />
                   ) : null}
 
                   <div className='mb-4'>
@@ -229,15 +217,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.password}
+                      maxLength='60'
                     />
                   </div>
 
                   {(formik.touched.password && formik.errors.password) ||
                   (tryToPass && formik.errors.password) ? (
-                    <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.password}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.password} />
                   ) : null}
 
                   <div className='mb-4'>
@@ -256,15 +242,13 @@ const Register = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.re_password}
+                      maxLength='60'
                     />
                   </div>
 
                   {(formik.touched.re_password && formik.errors.re_password) ||
                   (tryToPass && formik.errors.re_password) ? (
-                    <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.re_password}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.re_password} />
                   ) : null}
                 </>
               )}
@@ -321,10 +305,7 @@ const Register = () => {
                 </div>
 
                 {formik.touched.phone && formik.errors.phone ? (
-                  <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                    <p className='font-bold'>Error</p>
-                    <p>{formik.errors.phone}</p>
-                  </div>
+                  <ErrorForm description={formik.errors.phone} />
                 ) : null}
 
                 <div className='mb-4'>
@@ -343,15 +324,13 @@ const Register = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.residenceAddress}
+                    maxLength='50'
                   />
                 </div>
 
                 {formik.touched.residenceAddress &&
                 formik.errors.residenceAddress ? (
-                  <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                    <p className='font-bold'>Error</p>
-                    <p>{formik.errors.residenceAddress}</p>
-                  </div>
+                  <ErrorForm description={formik.errors.residenceAddress} />
                 ) : null}
 
                 <input
