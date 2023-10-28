@@ -12,9 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.14",
-    "@mui/material": "^5.14.14",
+    "@radix-ui/themes": "^2.0.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.5.1",
     "dotenv": "^16.3.1",

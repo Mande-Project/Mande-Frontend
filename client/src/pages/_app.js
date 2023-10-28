@@ -1,5 +1,7 @@
+import '@radix-ui/themes/styles.css';
 import Head from "next/head";
 import React from 'react';
+import Layout from "../components/Layout";
 import '../css/spinner.css';
 import './index.css';
 
@@ -10,7 +12,9 @@ const MyApp = ({ Component, pageProps }) => {
       <Head>
         <title>MANDE</title>
       </Head>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   )
 }
