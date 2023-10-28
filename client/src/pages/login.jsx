@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <>
-      <h1 className='text-center text-2xl font-light text-white'>Login</h1>
+      <h1 data-testid="login-title" className='text-center text-2xl font-light text-white'>Login</h1>
 
       <div className='mt-5 flex justify-center'>
         <div className='w-full max-w-sm'>
