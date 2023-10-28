@@ -1,8 +1,8 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom"; // Import the jest-dom extensions for expect
 import Register from "./register";
+/* eslint-disable no-undef */
 
 jest.mock("react-toastify", () => ({
   toast: {
@@ -24,7 +24,6 @@ jest.mock("../components/Layout.jsx", () => ({
 }));
 
 describe("Register page", () => {
-
   it('Muestra el título "Register"', () => {
     render(<Register />);
     const title = screen.getByText("Register");
@@ -35,11 +34,12 @@ describe("Register page", () => {
     render(<Register />);
     const typeUserLabel = screen.getByText("Type of User");
     const selectInput = screen.getByRole("combobox");
-
+    
     expect(typeUserLabel).toBeInTheDocument();
     expect(selectInput).toBeInTheDocument();
   });
-
+  
+});
   // it('Validación del formulario en el primer paso', async () => {
   //   // Mock de la función handleSignUp
   //   const handleSignUp = jest.fn();
@@ -70,4 +70,3 @@ describe("Register page", () => {
   //   // Verifica que handleSignUp no haya sido llamado (ya que no debería haber pasado la validación)
   //   // expect(handleSignUp).not.toHaveBeenCalled();
   // });
-});
