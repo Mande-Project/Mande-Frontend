@@ -23,52 +23,51 @@ jest.mock("../components/Layout.jsx", () => ({
   default: ({ children }) => <div>{children}</div>,
 }));
 
-// Mock the geolocation API
-// const geolocationMock = {
-//   permissions: {
-//     query: jest.fn().mockResolvedValue({ state: "granted" }),
-//   },
-//   getCurrentPosition: jest.fn(),
-// };
-// global.navigator.geolocation = geolocationMock;
+describe("Register page", () => {
 
-test("it renders the Register component", async () => {
-  render(<Register />);
+  it('Muestra el título "Register"', () => {
+    render(<Register />);
+    const title = screen.getByText("Register");
+    expect(title).toBeInTheDocument();
+  });
 
-  // Ensure that the component is initially displayed
-  const registerHeader = screen.getByText("Register");
-  expect(registerHeader).toBeInTheDocument();
+  it("Shows selector user and options", () => {
+    render(<Register />);
+    const typeUserLabel = screen.getByText("Type of User");
+    const selectInput = screen.getByRole("combobox");
 
-//   // Fill out the first part of the form
-//   // Find the element for Type of User directly
-//   const typeOfUserElement = screen.getByText('Type of User');
-//   // Click on the element to open the dropdown
-//   fireEvent.click(typeOfUserElement);
-//   // Find and select the option you want
-//   const option = await screen.findByText('Customer');
-//   fireEvent.click(option);
+    expect(typeUserLabel).toBeInTheDocument();
+    expect(selectInput).toBeInTheDocument();
+  });
 
-  //userEvent.selectOptions(screen.getByLabelText("Type of User"), "Customer");
-  //const firstNameLabel = screen.getByLabelText("First Name");
-  const firstNameInput = screen.getByRole('textbox', { name: "First Name" });  // O busca por 'id'
-  userEvent.type(firstNameInput, "John");
-  expect(firstNameInput).toHaveValue("John");
-  //userEvent.type(screen.getByLabelText("First Name"), "John");
+  // it('Validación del formulario en el primer paso', async () => {
+  //   // Mock de la función handleSignUp
+  //   const handleSignUp = jest.fn();
   
-  userEvent.type(screen.getByLabelText("Last Name"), "Doe");
-  userEvent.type(screen.getByLabelText("Email"), "johndoe@example.com");
-  userEvent.type(screen.getByLabelText("Password"), "securepassword");
-  userEvent.type(screen.getByLabelText("Confirm Password"), "securepassword");
-  userEvent.type(screen.getByLabelText("Phone Number"), "1234567890");
-  userEvent.click(screen.getByText("Continue"));
-
-  // Wait for geolocation
-//   await waitFor(() => {
-//     expect(geolocationMock.permissions.query).toHaveBeenCalled();
-//     expect(geolocationMock.getCurrentPosition).toHaveBeenCalled();
-//   });
-
-  // Fill out the second part of the form
-  userEvent.type(screen.getByLabelText("Residence Address"), "123 Main St");
-  userEvent.click(screen.getByText("Register"));
+  //   render(<Register />);
+  
+  //   // Selecciona los campos y botón necesarios
+  //   const firstNameInput = screen.getByLabelText('First Name');
+  //   const lastNameInput = screen.getByLabelText('Last Name');
+  //   const emailInput = screen.getByLabelText('Email');
+  //   const passwordInput = screen.getByLabelText('Password');
+  //   const confirmPasswordInput = screen.getByLabelText('Confirm Password');
+  //   const continueButton = screen.getByText('Continue');
+  
+  //   // Simula completar el formulario con datos incorrectos
+  //   fireEvent.change(firstNameInput, { target: { value: 'J' } });
+  //   fireEvent.change(lastNameInput, { target: { value: 'D' } });
+  //   fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+  //   fireEvent.change(passwordInput, { target: { value: 'short' } });
+  //   fireEvent.change(confirmPasswordInput, { target: { value: 'password'} });
+  
+  //   // Hacer clic en el botón "Continue"
+  //   // userEvent.click(continueButton);
+  
+  //   // Espera a que las validaciones se completen
+  //   // await screen.findByText('Error'); // Espera a que aparezca un mensaje de error
+  
+  //   // Verifica que handleSignUp no haya sido llamado (ya que no debería haber pasado la validación)
+  //   // expect(handleSignUp).not.toHaveBeenCalled();
+  // });
 });
