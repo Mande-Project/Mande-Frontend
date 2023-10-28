@@ -1,30 +1,13 @@
 import { useRouter } from 'next/router';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment} from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { checkAuthenticated, load_user } from '../api/auth';
-import { useAuthStore } from '../store/auth';
 import Header from './Header';
-import NotAccess from './NotAccess';
 import Sidebar from './Sidebar';
-import Spinner from './Spinner';
 
 // eslint-disable-next-line react/prop-types
 const Layout = ({ children }) => {
   const router = useRouter();
-  const [hydrated, setHydrated] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    setIsAuthenticated(useAuthStore.getState().isAuthenticated);
-  }, [useAuthStore.getState().isAuthenticated]);
-
-  useEffect(() => {
-    const access = useAuthStore.getState().access;
-    checkAuthenticated(access);
-    load_user(access);
-    setHydrated(true);
-  }, []);
 
   return (
     <Fragment>
@@ -50,9 +33,6 @@ const Layout = ({ children }) => {
         </div>
       ) : (
         <>
-          {!hydrated ? (
-            <Spinner />
-          ) : (
             <div className='min-h-screen bg-gray-200'>
               <div className='flex min-h-screen'>
                 <Sidebar />
@@ -71,11 +51,10 @@ const Layout = ({ children }) => {
                     theme='dark'
                   />
                   <Header />
-                  {isAuthenticated ? { children } : <NotAccess />}
+                  { children }
                 </main>
               </div>
             </div>
-          )}
         </>
       )}
     </Fragment>

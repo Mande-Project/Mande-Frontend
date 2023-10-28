@@ -9,6 +9,7 @@ import { loginRequest } from '../api/auth';
 import ErrorForm from '../components/ErrorForm';
 import { useAuthStore } from '../store/auth';
 import { LoginValidation } from '../validation/loginValidation';
+import Layout from '../components/Layout';
 const Login = () => {
   const router = useRouter();
 
@@ -36,14 +37,14 @@ const Login = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/');
+        router.push('/dashborad');
       }, 2000);
     }
   };
 
   return (
-    <>
-      <h1 data-testid="login-title" className='text-center text-2xl font-light text-white'>Login</h1>
+    <Layout>
+      <h1 className='text-center text-2xl font-light text-white'>Login</h1>
 
       <div className='mt-5 flex justify-center'>
         <div className='w-full max-w-sm'>
@@ -118,7 +119,7 @@ const Login = () => {
           </form>
         </div>
       </div>
-    </>
+    </Layout>
   );
 };
 

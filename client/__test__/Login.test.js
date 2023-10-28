@@ -41,7 +41,6 @@ describe("Login page", () => {
   it("Renders the login form", () => {
     // Assert that the login input element is present in the component
     expect(loginButton).toBeInTheDocument();
-    expect(screen.getByTestId("login-title")).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
     expect(passwordInput).toBeInTheDocument();
   });

@@ -11,6 +11,7 @@ import { signupRequest } from '../api/auth';
 import ErrorForm from '../components/ErrorForm';
 import { useAuthStore } from '../store/auth';
 import { RegisterValidation } from '../validation/registerValidation';
+import Layout from '../components/Layout';
 
 const Register = () => {
   const router = useRouter();
@@ -54,7 +55,7 @@ const Register = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/');
+        router.push('/dashborad');
       }, 3000);
     }
   };
@@ -101,7 +102,7 @@ const Register = () => {
   };
 
   return (
-    <>
+    <Layout>
       <h1 className='text-center text-2xl font-light text-white'>Register</h1>
 
       <div className='flex h-full w-full flex-row flex-wrap justify-center'>
@@ -352,7 +353,7 @@ const Register = () => {
           </div>
         )}
       </div>
-    </>
+    </Layout>
   );
 };
 
