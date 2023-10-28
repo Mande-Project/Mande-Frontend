@@ -1,10 +1,13 @@
+import React from 'react';
+import Header2 from '../components/Header2';
 
-import Header2 from '@/src/components//Header2';
-const Lading = () => {
+const Landing = () => {
   return (
-    <Header2 />
-
+    <div>
+      <Header2 />
+      {}
+    </div>
   )
 };
 
-export default Lading;
+export default Landing;
