@@ -122,6 +122,7 @@ const Register = () => {
     }
   };
 
+  
   useEffect(() => {
     console.log(isLocated);
     if (!isLocated) {
