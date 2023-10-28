@@ -1,4 +1,4 @@
-import Layout from '@/src/components/Layout';
+// import Layout from '@/src/components/Layout';
 import { renderToast } from '@/src/components/Toast';
 import { useFormik } from 'formik';
 import Link from 'next/link';
@@ -26,7 +26,9 @@ const Login = () => {
   const handleLogin = async (values) => {
     const id = toast.loading('Loading...');
     const res = await loginRequest(values);
-    renderToast(id, res.type, res.message, () => {});
+    if(res){
+      renderToast(id, res.type, res.message, () => {});
+    }
     checkoutIsAuthenticated();
   };
 
@@ -40,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <Layout>
+    <>
       <h1 className='text-center text-2xl font-light text-white'>Login</h1>
 
       <div className='mt-5 flex justify-center'>
@@ -116,7 +118,7 @@ const Login = () => {
           </form>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

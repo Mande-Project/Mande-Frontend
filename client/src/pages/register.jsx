@@ -1,4 +1,4 @@
-import Layout from '@/src/components/Layout';
+// import Layout from '@/src/components/Layout';
 import { renderToast } from '@/src/components/Toast';
 import useSelect from '@/src/hooks/useSelect';
 import { typeOfUsers } from '@/src/utils/typeOfUsers';
@@ -30,8 +30,6 @@ const Register = () => {
       password: '',
       re_password: '',
       residenceAddress: '',
-      latitude: '',
-      longitude: '',
     },
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
@@ -44,9 +42,11 @@ const Register = () => {
   const handleSignUp = async (values) => {
     const id = toast.loading('Loading...');
     const res = await signupRequest(values);
-    renderToast(id, res.type, res.message, () => {
-      setAccountCreated(true);
-    });
+    if (res) {
+      renderToast(id, res.type, res.message, () => {
+        setAccountCreated(true);
+      });
+    }
     checkoutIsAuthenticated();
   };
 
@@ -101,7 +101,7 @@ const Register = () => {
   };
 
   return (
-    <Layout>
+    <>
       <h1 className='text-center text-2xl font-light text-white'>Register</h1>
 
       <div className='flex h-full w-full flex-row flex-wrap justify-center'>
@@ -352,7 +352,7 @@ const Register = () => {
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 };
 

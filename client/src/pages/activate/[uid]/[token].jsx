@@ -33,7 +33,7 @@ const ActivateAccount = () => {
   };
 
   return (
-    <Layout>
+    <>
       <h1 className='text-center text-2xl text-white font-light'>
         Verify your Account
       </h1>
@@ -68,7 +68,7 @@ const ActivateAccount = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

@@ -5,14 +5,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { checkAuthenticated, load_user } from '../api/auth';
 import { useAuthStore } from '../store/auth';
 import Header from './Header';
+import NotAccess from './NotAccess';
 import Sidebar from './Sidebar';
 import Spinner from './Spinner';
-import '@radix-ui/themes/styles.css';
 
 // eslint-disable-next-line react/prop-types
 const Layout = ({ children }) => {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsAuthenticated(useAuthStore.getState().isAuthenticated);
+  }, [useAuthStore.getState().isAuthenticated]);
 
   useEffect(() => {
     const access = useAuthStore.getState().access;
@@ -26,7 +31,7 @@ const Layout = ({ children }) => {
       {router.pathname === '/login' ||
       router.pathname === '/register' ||
       router.pathname.startsWith('/activate/') ? (
-        <div className='bg-gray-800 min-h-screen flex flex-col justify-center'>
+        <div className='flex min-h-screen flex-col justify-center bg-gray-800'>
           <div>
             <ToastContainer
               position='top-right'
@@ -48,11 +53,11 @@ const Layout = ({ children }) => {
           {!hydrated ? (
             <Spinner />
           ) : (
-            <div className='bg-gray-200 min-h-screen'>
+            <div className='min-h-screen bg-gray-200'>
               <div className='flex min-h-screen'>
                 <Sidebar />
 
-                <main className='sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5'>
+                <main className='p-5 sm:min-h-screen sm:w-2/3 xl:w-4/5'>
                   <ToastContainer
                     position='top-right'
                     autoClose={5000}
@@ -66,7 +71,7 @@ const Layout = ({ children }) => {
                     theme='dark'
                   />
                   <Header />
-                  {children}
+                  {isAuthenticated ? { children } : <NotAccess />}
                 </main>
               </div>
             </div>

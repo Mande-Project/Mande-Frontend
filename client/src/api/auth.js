@@ -1,7 +1,7 @@
 import { apiWithAutorization, apiWithoutAutorization } from "../libs/axios";
 import { useAuthStore } from "../store/auth";
 
-const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail,  } = useAuthStore.getState();
+const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail, } = useAuthStore.getState();
 
 export const checkAuthenticated = async (access) => {
 
@@ -59,6 +59,9 @@ export const signupRequest = async (body) => {
   } catch (err) {
     signupFail()
     try {
+      if (err.request.status === 500) {
+        return { type: 'error', message: 'A server error ocurred' };
+      }
       const errorResponse = JSON.parse(err.request.response);
 
       if (errorResponse) {
