@@ -1,7 +1,7 @@
 import { apiWithAutorization, apiWithoutAutorization } from "../libs/axios";
 import { useAuthStore } from "../store/auth";
 
-const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail,  } = useAuthStore.getState();
+const { loginSuccess, userLoadedSuccess, userLoadedFail, loginFail, authenticatedFail, authenticatedSuccess, logoutUser, signupSuccess, signupFail, } = useAuthStore.getState();
 
 export const checkAuthenticated = async (access) => {
 
@@ -37,7 +37,6 @@ export const load_user = async (access) => {
 }
 
 export const loginRequest = async (body) => {
-  console.log(body)
   try {
     const res = await apiWithoutAutorization.post("api_users/auth/jwt/create/", body)
     loginSuccess(res.data)
@@ -60,6 +59,9 @@ export const signupRequest = async (body) => {
   } catch (err) {
     signupFail()
     try {
+      if (err.request.status === 500) {
+        return { type: 'error', message: 'A server error ocurred' };
+      }
       const errorResponse = JSON.parse(err.request.response);
 
       if (errorResponse) {
@@ -84,7 +86,6 @@ export const signupRequest = async (body) => {
 export const verify = async (uid, token) => {
   const body = JSON.stringify({ uid, token })
   try {
-    console.log(body)
     await apiWithoutAutorization.post("api_users/auth/users/activation/", body)
     // activationSucess()
     return { type: 'success', message: 'The user was activated' }
@@ -96,7 +97,6 @@ export const verify = async (uid, token) => {
     }
     const message = `An error ocurred`;
     return { type: 'error', message };
-    // console.log(err)
   }
 }
 
