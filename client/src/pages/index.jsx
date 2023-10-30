@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-const logo = '/logo.ico';
 
 const Index = () => {
   return (
@@ -30,7 +29,7 @@ const Index = () => {
       </div>
       <div className='mb-8 h-40 w-40'>
         <Image
-          src={logo}
+          src={'../../assets/logo.ico'}
           alt='Logo de MANDE'
           width={160}
           height={160}
