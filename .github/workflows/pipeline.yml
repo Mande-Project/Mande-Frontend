@@ -116,7 +116,7 @@ jobs:
   deploy:
     needs: [tests]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/releases' ) }}
+    if: ${{github.ref == 'refs/heads/main' || github.ref == 'refs/heads/releases'}}
     steps:
       - uses: actions/checkout@v4
         with:

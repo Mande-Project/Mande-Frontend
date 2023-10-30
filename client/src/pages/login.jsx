@@ -1,14 +1,15 @@
-import Layout from '@/src/components/Layout';
-import showToast from '@/src/components/Toast';
+// import Layout from '@/src/components/Layout';
+import { renderToast } from '@/src/components/Toast';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
-import { useAuthStore } from '../store/auth';
 import { loginRequest } from '../api/auth';
-
+import ErrorForm from '../components/ErrorForm';
+import { useAuthStore } from '../store/auth';
+import { LoginValidation } from '../validation/loginValidation';
+import Layout from '../components/Layout';
 const Login = () => {
   const router = useRouter();
 
@@ -17,36 +18,27 @@ const Login = () => {
       email: '',
       password: '',
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Email isn't valid")
-        .required('Email is required'),
-      password: Yup.string().required('The password is required'),
-    }),
+    validationSchema: LoginValidation,
     onSubmit: (values) => {
       handleLogin(values);
     },
   });
 
   const handleLogin = async (values) => {
-    console.log(values);
     const id = toast.loading('Loading...');
     const res = await loginRequest(values);
-    console.log(res)
-    renderToast(id, res.type, res.message);
+    if(res){
+      renderToast(id, res.type, res.message, () => {});
+    }
+    checkoutIsAuthenticated();
+  };
+
+  const checkoutIsAuthenticated = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/');
+        router.push('/dashborad');
       }, 2000);
-    }
-  };
-
-  const renderToast = (id, type, message) => {
-    if (type === 'error') {
-      showToast('promise_error', message, id);
-    } else {
-      showToast('promise_success', message, id);
     }
   };
 
@@ -61,10 +53,7 @@ const Login = () => {
             onSubmit={formik.handleSubmit}
           >
             {formik.touched.typeUser && formik.errors.typeUser ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.typeUser}</p>
-              </div>
+              <ErrorForm description={formik.errors.typeUser} />
             ) : null}
 
             <div className='mb-4'>
@@ -87,10 +76,7 @@ const Login = () => {
             </div>
 
             {formik.touched.email && formik.errors.email ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.email}</p>
-              </div>
+              <ErrorForm description={formik.errors.email} />
             ) : null}
 
             <div className='mb-4'>
@@ -113,10 +99,7 @@ const Login = () => {
             </div>
 
             {formik.touched.password && formik.errors.password ? (
-              <div className='my-2 border-l-4 border-red-500 bg-red-100 p-4 text-red-700'>
-                <p className='font-bold'>Error</p>
-                <p>{formik.errors.password}</p>
-              </div>
+              <ErrorForm description={formik.errors.password} />
             ) : null}
 
             <input

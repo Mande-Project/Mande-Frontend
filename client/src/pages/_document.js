@@ -1,5 +1,7 @@
+import { Theme } from '@radix-ui/themes';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import React from 'react';
+
 class MyDocument extends Document {
   render() {
     return (
@@ -18,8 +20,10 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <Main />
-          <NextScript />
+            <Theme>
+              <Main />
+              <NextScript />
+            </Theme>
         </body>
       </Html>
     );
