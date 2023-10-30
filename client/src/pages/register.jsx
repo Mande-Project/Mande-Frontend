@@ -55,7 +55,7 @@ const Register = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/dashborad');
+        router.push('/dashboard');
       }, 3000);
     }
   };

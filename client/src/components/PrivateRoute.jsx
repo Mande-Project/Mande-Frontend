@@ -1,23 +1,20 @@
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { checkAuthenticated } from '../api/auth';
+import React, { useEffect} from 'react';
 import { useAuthStore } from '../store/auth';
 
 const PrivateRoute = ({ children }) => {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const access = useAuthStore.getState().access;
-      await checkAuthenticated(access);
-      const isAuthenticatedR = useAuthStore.getState().isAuthenticated;
-      setIsAuthenticated(isAuthenticatedR);
-    };
-
-    fetchData();
-  }, [router]);
+  const isAuthenticated = useAuthStore.getState().isAuthenticated;
+// 
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       await checkAuthenticated(access);
+//       const isAuthenticated = useAuthStore.getState().isAuthenticated;
+//     };
+// 
+//     fetchData();
+//   }, [router]);
 
   useEffect(() => {
     if (!isAuthenticated) {

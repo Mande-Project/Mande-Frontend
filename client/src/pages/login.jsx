@@ -37,7 +37,7 @@ const Login = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/dashborad');
+        router.push('/dashboard');
       }, 2000);
     }
   };
