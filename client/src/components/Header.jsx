@@ -3,6 +3,8 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { logout } from '../api/auth';
 const Header = () => {
+  const [user] = useAuthStore((state) => [state.user])
+  const {first_name} = user
   const router = useRouter();
   const isAuthenticated = useAuthStore.getState().isAuthenticated;
 
@@ -43,8 +45,10 @@ const Header = () => {
   );
 
   return (
-    <div className='sm:flex sm:justify-between sm:items-end mb-6 sm:h-7 '>
-      <p className='mr-2 lg:mb-0'>Bienvenido</p>
+    <div className='mb-6 sm:flex sm:h-7 sm:items-end sm:justify-between '>
+      <p className='mr-2 text-lg font-light lg:mb-0'>
+        Bienvenido {`${first_name}`}
+      </p>
       {isAuthenticated ? authLinks() : guestLinks()}
     </div>
   );

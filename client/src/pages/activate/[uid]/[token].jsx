@@ -2,7 +2,7 @@ import { verify } from '@/src/api/auth';
 import Layout from '@/src/components/Layout';
 import showToast from '@/src/components/Toast';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -17,10 +17,12 @@ const ActivateAccount = () => {
   }
 
   const verifyAccount = async () => {
-    const { uid, token } = router.query;
-    const id = toast.loading('Loading...');
-    const res = await verify(uid, token);
-    renderToast(id, res.type, res.message);
+    if(router.query.uid && router.query.token) {
+      const id = toast.loading('Loading...');
+      const { uid, token } = router.query;
+      const res = await verify(uid, token);
+      renderToast(id, res.type, res.message);
+    }
   };
 
   const renderToast = (id, type, message) => {
