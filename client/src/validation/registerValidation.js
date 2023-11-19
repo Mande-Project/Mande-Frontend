@@ -38,4 +38,6 @@ export const RegisterValidation = Yup.object().shape({
     .max(50, 'Residence address must not have over 50 characters')
     .required('Residence address is required'),
   role: Yup.string().required('You need to choose a type of user'),
+  country: Yup.string().required('Country is required'),
+  city: Yup.string().required('City is required'),
 });

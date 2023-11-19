@@ -31,10 +31,13 @@ const Register = () => {
       password: '',
       re_password: '',
       residenceAddress: '',
+      country: '',
+      city: '',
+      address: '',
     },
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
-      const { first_name, last_name } = values;
+      const { first_name, last_name, residenceAddress, country, city } = values;
       values.username = `${first_name}_${last_name}`;
       handleSignUp(values);
     },
@@ -329,9 +332,56 @@ const Register = () => {
                   />
                 </div>
 
-                {formik.touched.residenceAddress &&
-                formik.errors.residenceAddress ? (
+                {formik.touched.residenceAddress && formik.errors.residenceAddress ? (
                   <ErrorForm description={formik.errors.residenceAddress} />
+                ) : null}
+
+                <div className='mb-4'>
+                  <label
+                    className='mb-2 block text-sm font-bold text-gray-700'
+                    htmlFor='country'
+                  >
+                    Country
+                  </label>
+
+                  <input
+                    className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+                    id='country'
+                    type='text'
+                    placeholder='User country'
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.country}
+                    maxLength='50'
+                  />
+                </div>
+
+                {formik.touched.country && formik.errors.country ? (
+                  <ErrorForm description={formik.errors.country} />
+                ) : null}
+
+                <div className='mb-4'>
+                  <label
+                    className='mb-2 block text-sm font-bold text-gray-700'
+                    htmlFor='city'
+                  >
+                    City
+                  </label>
+
+                  <input
+                    className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+                    id='city'
+                    type='text'
+                    placeholder='User city'
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.city}
+                    maxLength='50'
+                  />
+                </div>
+
+                {formik.touched.city && formik.errors.city ? (
+                  <ErrorForm description={formik.errors.city} />
                 ) : null}
 
                 <input

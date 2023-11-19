@@ -1,12 +1,18 @@
 import { useAuthStore } from '@/src/store/auth';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { logout } from '../api/auth';
 const Header = () => {
-  const [user] = useAuthStore((state) => [state.user])
-  const {first_name} = user
   const router = useRouter();
-  const isAuthenticated = useAuthStore.getState().isAuthenticated;
+  const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false);
+  const [dataUser, setDataUser] = useState({});
+
+  useEffect(() => {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated;
+    const user = useAuthStore.getState().user;
+    setIsAuthenticatedUser(isAuthenticated);
+    setDataUser(user);
+  }, []);
 
   const handleLogout = async () => {
     logout();
@@ -14,18 +20,18 @@ const Header = () => {
   };
 
   const guestLinks = () => (
-    <div className='flex justify-end grow space-x-10 h-full '>
+    <div className='flex h-full grow justify-end space-x-10 '>
       <button
         onClick={() => router.push('/login')}
         type='button'
-        className='bg-blue-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
+        className='w-full rounded bg-blue-800 px-2 py-1 text-xs font-bold uppercase text-white shadow-md sm:w-auto'
       >
         Login
       </button>
       <button
         onClick={() => router.push('/register')}
         type='button'
-        className='bg-blue-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
+        className='w-full rounded bg-blue-800 px-2 py-1 text-xs font-bold uppercase text-white shadow-md sm:w-auto'
       >
         Sign Up
       </button>
@@ -33,11 +39,11 @@ const Header = () => {
   );
 
   const authLinks = () => (
-    <div className='flex justify-end grow space-x-10 h-full '>
+    <div className='flex h-full grow justify-end space-x-10 '>
       <button
         onClick={() => handleLogout()}
         type='button'
-        className='bg-red-800 w-full sm:w-auto font-bold uppercase text-xs rounded py-1 px-2 text-white shadow-md'
+        className='w-full rounded bg-red-800 px-2 py-1 text-xs font-bold uppercase text-white shadow-md sm:w-auto'
       >
         Logout
       </button>
@@ -47,9 +53,9 @@ const Header = () => {
   return (
     <div className='mb-6 sm:flex sm:h-7 sm:items-end sm:justify-between '>
       <p className='mr-2 text-lg font-light lg:mb-0'>
-        Bienvenido {`${first_name}`}
+        Bienvenido {`${dataUser.first_name}`}
       </p>
-      {isAuthenticated ? authLinks() : guestLinks()}
+      {isAuthenticatedUser ? authLinks() : guestLinks()}
     </div>
   );
 };
