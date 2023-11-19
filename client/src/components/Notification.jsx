@@ -1,8 +1,9 @@
-import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
+import {  Dialog, Flex, Text } from '@radix-ui/themes';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const Notification = ({ notification }) => {
-  const { id, date, subject, message } = notification;
+  const {  date, subject, message } = notification;
 
   const truncateString = (str, num) => {
     if (str.length <= num) {
@@ -77,6 +78,10 @@ const Notification = ({ notification }) => {
       </td>
     </tr>
   );
+};
+
+Notification.propTypes = {
+  notification: PropTypes.object.isRequired,
 };
 
 export default Notification;

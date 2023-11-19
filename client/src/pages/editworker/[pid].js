@@ -33,8 +33,9 @@ const EditWorker = () => {
       .required('El email del cliente es obligatorio')
   });
 
+  // eslint-disable-next-line no-unused-vars
   const actualizarInfoCliente = async valores => {
-    const { name, company, email, phone } = valores;
+    // const { name, company, email, phone } = valores;
 
     try {
       console.log('updating')

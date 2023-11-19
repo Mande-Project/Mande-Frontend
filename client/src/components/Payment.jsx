@@ -1,8 +1,9 @@
 import { Dialog, Flex, Text } from '@radix-ui/themes';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Payment = ({ payment }) => {
-  const { id, date, amount, account, workDone } = payment;
+  const {  date, amount, account, workDone } = payment;
 
   return (
     <tr>
@@ -77,6 +78,10 @@ const Payment = ({ payment }) => {
       </td>
     </tr>
   );
+};
+
+Payment.propTypes = {
+  payment: PropTypes.object.isRequired,
 };
 
 export default Payment;

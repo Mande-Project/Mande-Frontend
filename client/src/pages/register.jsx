@@ -38,6 +38,7 @@ const Register = () => {
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
       const { first_name, last_name, residenceAddress, country, city } = values;
+      values.address = `${residenceAddress}, ${country}, ${city}`;
       values.username = `${first_name}_${last_name}`;
       handleSignUp(values);
     },

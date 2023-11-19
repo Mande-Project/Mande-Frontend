@@ -2,7 +2,7 @@
 import { allServices } from '@/src/assets'
 import Layout from '@/src/components/Layout'
 import PrivateRoute from '@/src/components/PrivateRoute'
-import { Badge, Dialog, Flex, Separator, Text } from '@radix-ui/themes'
+import { Badge, Dialog, Flex, Separator } from '@radix-ui/themes'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'

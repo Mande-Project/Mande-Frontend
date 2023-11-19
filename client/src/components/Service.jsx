@@ -1,6 +1,7 @@
 import { Badge, Dialog, Flex, Text } from '@radix-ui/themes';
 import Router from 'next/router';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Service = ({ service }) => {
   const { id, workerName, job, distance, rating, price, description } = service;
@@ -116,6 +117,10 @@ const Service = ({ service }) => {
       </td>
     </tr>
   );
+};
+
+Service.propTypes = {
+  service: PropTypes.object.isRequired,
 };
 
 export default Service;

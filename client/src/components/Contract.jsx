@@ -2,9 +2,11 @@ import { Badge, Dialog, Flex, Text } from '@radix-ui/themes';
 import React from 'react';
 import Swal from 'sweetalert2';
 
+import PropTypes from 'prop-types';
+
 const Contract = ({ contract }) => {
   const {
-    id,
+    // id,
     date,
     clientName,
     workerName,
@@ -157,6 +159,10 @@ const Contract = ({ contract }) => {
       </td>
     </tr>
   );
+};
+
+Contract.propTypes = {
+  contract: PropTypes.object.isRequired,
 };
 
 export default Contract;

@@ -1,6 +1,5 @@
 import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
@@ -17,7 +16,6 @@ const options = [
 ];
 
 const chooseJob = () => {
-  const router = useRouter();
   const [jobsChosen, setJobsChosen] = useState([]);
   const [message, setMessage] = useState(null);
   const [price, setPrice] = useState('');
