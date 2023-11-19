@@ -20,6 +20,7 @@ const chooseJob = () => {
   const router = useRouter();
   const [jobsChosen, setJobsChosen] = useState([]);
   const [message, setMessage] = useState(null);
+  const [price, setPrice] = useState('');
 
   useEffect(() => {
     console.log(jobsChosen);
@@ -38,17 +39,30 @@ const chooseJob = () => {
   };
 
   const validateButtonJobs = () => {
-    return jobsChosen.length === 0 ? 'opacity-50 cursor-not-allowed' : '';
+    return jobsChosen.length === 0 || price === '0' || price === ''
+      ? 'opacity-50 cursor-not-allowed'
+      : '';
   };
 
   const onHandleButton = () => {
-    console.log('Siuuu');
+    // Validate
+    //Intentamos pasar price a entero y verificamos que sea mayor a 0
+    if (parseInt(price) <= 0) {
+      setMessage('The price must be greater than 0');
+      setTimeout(() => {
+        setMessage(null);
+      }, 8000);
+      return;
+    }
+    if (jobsChosen.length !== 0 && price !== '0' && price !== '') {
+      console.log('Siuuu');
 
-    // Redirect
-    // router.push('/pedidos');
+      // Redirect
+      // router.push('/pedidos');
 
-    // Show alert
-    Swal.fire('Successfully', 'The jobs was register correctly', 'success');
+      // Show alert
+      Swal.fire('Successfully', 'The jobs was register correctly', 'success');
+    }
   };
 
   return (
@@ -58,19 +72,47 @@ const chooseJob = () => {
 
         {message && showMessage()}
 
-        <p className='my-2 mt-10 border-l-4 border-gray-800 bg-white p-2 text-sm font-bold text-gray-700'>
-          In this part you can choose your o your jobs
-        </p>
+        <div className='mb-6 mt-6'>
+          <span className='border-l-4 border-gray-800 bg-white p-2 text-sm font-bold text-gray-700'>
+            In this part you can choose your jobs with the price that you want
+          </span>
+        </div>
 
-        <Select
-          options={options} //this are the options of the db
-          isMulti={true}
-          onChange={(option) => selectJob(option)}
-          getOptionLabel={(options) => options.name}
-          getOptionValue={(options) => options.id}
-          placeholder='Select the job or the jobs that you will do'
-          noOptionsMessage={() => "There aren't results"}
-        />
+        <div>
+          <label
+            className='mb-2 block text-sm font-bold text-gray-700'
+            htmlFor='name'
+          >
+            Job
+          </label>
+
+          <Select
+            options={options} //this are the options of the db
+            isMulti={false}
+            onChange={(option) => selectJob(option)}
+            getOptionLabel={(options) => options.name}
+            getOptionValue={(options) => options.id}
+            placeholder='Select the job or the jobs that you will do'
+            noOptionsMessage={() => "There aren't results"}
+          />
+        </div>
+
+        <div className='my-4'>
+          <label
+            className='mb-2 block text-sm font-bold text-gray-700'
+            htmlFor='name'
+          >
+            Price
+          </label>
+
+          <input
+            className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+            id='hours'
+            type='number'
+            placeholder='Number of Hours'
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
 
         <button
           type='button'
