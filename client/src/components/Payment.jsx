@@ -1,21 +1,15 @@
-import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
+import { Dialog, Flex, Text } from '@radix-ui/themes';
 import React from 'react';
 
-const Notification = ({ notification }) => {
-  const { id, date, subject, message } = notification;
-
-  const truncateString = (str, num) => {
-    if (str.length <= num) {
-      return str;
-    }
-    return str.slice(0, num) + '...';
-  };
+const Payment = ({ payment }) => {
+  const { id, date, amount, account, workDone } = payment;
 
   return (
     <tr>
       <td className='border px-4 py-2'>{date}</td>
-      <td className='border px-4 py-2'>{truncateString(subject, 25)}</td>
-      <td className='border px-4 py-2'>{truncateString(message, 25)}</td>
+      <td className='border px-4 py-2'>${amount}</td>
+      <td className='border px-4 py-2'>{account}</td>
+      <td className='border px-4 py-2'>{workDone}</td>
       <td className='border px-4 py-2'>
         <Dialog.Root>
           <Dialog.Trigger>
@@ -42,7 +36,7 @@ const Notification = ({ notification }) => {
           </Dialog.Trigger>
 
           <Dialog.Content style={{ maxWidth: 450 }}>
-            <Dialog.Title>Notification</Dialog.Title>
+            <Dialog.Title>Payment</Dialog.Title>
             <Dialog.Description size='2' mb='4'>
               Date: <span>{date}</span>
             </Dialog.Description>
@@ -50,15 +44,21 @@ const Notification = ({ notification }) => {
             <Flex direction='column' gap='3' className='mt-5'>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
-                  Subject
+                  Amount
                 </Text>
-                <Text>{subject}</Text>
+                <Text>{amount}</Text>
               </label>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
-                  Messgae
+                  Account
                 </Text>
-                <Text>{message}</Text>
+                <Text>{account}</Text>
+              </label>
+              <label>
+                <Text as='div' size='2' mb='1' weight='bold'>
+                  Work Done
+                </Text>
+                <Text>{workDone}</Text>
               </label>
             </Flex>
 
@@ -79,4 +79,4 @@ const Notification = ({ notification }) => {
   );
 };
 
-export default Notification;
+export default Payment;
