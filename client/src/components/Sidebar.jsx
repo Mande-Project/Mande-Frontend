@@ -14,7 +14,7 @@ const Sidebar = () => {
 
       <nav className='mt-5 list-none'>
         <li className={router.pathname === '/' ? 'bg-blue-800 p-2' : 'p-2'}>
-          <Link href='/' className='text-white block'>
+          <Link href='/dashboard' className='text-white block'>
             Dashboard
           </Link>
         </li>

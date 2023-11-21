@@ -19,7 +19,6 @@ apiWithAutorization.interceptors.request.use(config => {
 
 
 export const apiWithoutAutorization = axios.create({
-  // baseURL: 'http://localhost:8000/',
   // eslint-disable-next-line no-undef
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
 })

@@ -44,7 +44,7 @@ const Header = () => {
 
   return (
     <div className='sm:flex sm:justify-between sm:items-end mb-6 sm:h-7 '>
-      <p className='mr-2 lg:mb-0'>Hola</p>
+      <p className='mr-2 lg:mb-0'>Bienvenido</p>
       {isAuthenticated ? authLinks() : guestLinks()}
     </div>
   );

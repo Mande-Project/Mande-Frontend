@@ -1,28 +1,26 @@
-import Layout from '@/src/components/Layout';
-import showToast from '@/src/components/Toast';
+// import Layout from '@/src/components/Layout';
+import { renderToast } from '@/src/components/Toast';
 import useSelect from '@/src/hooks/useSelect';
-import { typeOfUsers } from '@/src/utils';
+import { typeOfUsers } from '@/src/utils/typeOfUsers';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { Fragment, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import * as Yup from 'yup';
 import { signupRequest } from '../api/auth';
+import ErrorForm from '../components/ErrorForm';
 import { useAuthStore } from '../store/auth';
+import { RegisterValidation } from '../validation/registerValidation';
+import Layout from '../components/Layout';
 
 const Register = () => {
   const router = useRouter();
-
   const [role, SelectUser] = useSelect('', typeOfUsers);
   const [toSecPart, setToSecPart] = useState(false);
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
-  const [isLocated, setIsLocated] = useState(false);
-  const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
-  // Formik
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -33,121 +31,32 @@ const Register = () => {
       password: '',
       re_password: '',
       residenceAddress: '',
-      latitude: '',
-      longitude: '',
     },
-    validationSchema: Yup.object({
-      first_name: Yup.string()
-        .max(30, 'Firstname must not have over 30 letters')
-        .required('First name is required'),
-      last_name: Yup.string()
-        .max(30, 'Lastname must not have over 30 letters')
-        .required('Last name is required'),
-      email: Yup.string()
-        .email('Email is not valid') // showToast('success', `${data}`);
-
-        .matches(
-          /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-          'Email is not valid',
-        )
-        .required('Email is required'),
-      password: Yup.string()
-        .min(8, 'The password must not at least 8 characters')
-        .max(60, 'The password must not have over 60 characters')
-        .test(
-          'numeric-password',
-          'This password is entirely numeric.',
-          (value) => {
-            return !/^\d+$/.test(value);
-          },
-        )
-        .required('The password is required'),
-      re_password: Yup.string()
-        .required('The password confirmation is required')
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-      phone: Yup.string()
-        .matches(/^[0-9]+$/, 'phone must contain only numbers')
-        .min(7, 'Phone number must have at least 7 numbers')
-        .max(10, 'Phone number must not have over 10 numbers')
-        .required('Phone number is required'),
-      // residenceAddress: Yup.string()
-      //   .min(5, 'Residence address must have at least 5 characters')
-      //   .max(50, 'Residence address must not have over 50 characters')
-      //   .required('Residence address is required'),
-      role: Yup.string().required('You need to choose a type of user'),
-    }),
+    validationSchema: RegisterValidation,
     onSubmit: (values) => {
       const { first_name, last_name } = values;
       values.username = `${first_name}_${last_name}`;
-
-      if (!isLocated) {
-        if (values.residenceAddress === '') {
-          showToast('warning', 'You have to put your location manually');
-          return;
-        }
-      }
-
       handleSignUp(values);
     },
   });
 
-  const success = (pos) => {
-    var crd = pos.coords;
-    console.log('Your current position is:');
-    formik.setFieldValue('latitude', crd.latitude);
-    formik.setFieldValue('longitude', crd.longitude);
-    showToast('success', 'Your location has been set');
-    setIsLocated(true);
-  };
-
-  function errors() {
-    showToast('warning', 'You have to put your location manually');
-  }
-
-  const locateUser = () => {
-    if (navigator.geolocation) {
-      navigator.permissions
-        .query({ name: 'geolocation' })
-        .then(function (result) {
-          if (result.state === 'granted') {
-            navigator.geolocation.getCurrentPosition(success, errors, options);
-          } else if (result.state === 'prompt') {
-            navigator.geolocation.getCurrentPosition(success, errors, options);
-          } else if (result.state === 'denied') {
-            showToast('warning', 'Please enable location to use this app');
-          }
-        });
-    } else {
-      console.log('Geolocation is not supported by this browser.');
-    }
-  };
-
-  
-  useEffect(() => {
-    console.log(isLocated);
-    if (!isLocated) {
-      locateUser();
-    }
-  }, []);
-
   const handleSignUp = async (values) => {
     const id = toast.loading('Loading...');
     const res = await signupRequest(values);
-    renderToast(id, res.type, res.message);
+    if (res) {
+      renderToast(id, res.type, res.message, () => {
+        setAccountCreated(true);
+      });
+    }
+    checkoutIsAuthenticated();
+  };
+
+  const checkoutIsAuthenticated = () => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     if (isAuthenticated) {
       setTimeout(() => {
-        router.push('/');
-      }, 2000);
-    }
-  };
-
-  const renderToast = (id, type, message) => {
-    if (type === 'error') {
-      showToast('promise_error', message, id);
-    } else {
-      setAccountCreated(true);
-      showToast('promise_success', message, id);
+        router.push('/dashboard');
+      }, 3000);
     }
   };
 
@@ -164,7 +73,9 @@ const Register = () => {
       }
     };
     changeTypeUserOfFormik();
+  }, [role]);
 
+  useEffect(() => {
     const handleFormikErrorsChange = () => {
       const { role, first_name, last_name, email, password, re_password } =
         formik.errors;
@@ -179,7 +90,7 @@ const Register = () => {
     };
 
     handleFormikErrorsChange();
-  }, [role, formik.errors]);
+  }, [formik.errors]);
 
   const handleToSecondPart = (e) => {
     e.preventDefault();
@@ -192,18 +103,18 @@ const Register = () => {
 
   return (
     <Layout>
-      <h1 className='text-center text-2xl text-white font-light'>Register</h1>
+      <h1 className='text-center text-2xl font-light text-white'>Register</h1>
 
-      <div className='flex flex-row flex-wrap justify-center w-full h-full'>
-        <div className='flex justify-center mt-5 '>
+      <div className='flex h-full w-full flex-row flex-wrap justify-center'>
+        <div className='mt-5 flex justify-center '>
           <div className='w-full max-w-sm'>
             <form
-              className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
+              className='mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md'
               style={{ width: '400px' }}
             >
               <div className='mb-4'>
                 <label
-                  className='block text-gray-700 text-sm font-bold mb-2'
+                  className='mb-2 block text-sm font-bold text-gray-700'
                   htmlFor='role'
                 >
                   Type of User
@@ -214,155 +125,138 @@ const Register = () => {
                 </div>
               </div>
 
-              {formik.touched.role && formik.errors.role ? (
-                <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                  <p className='font-bold'>Error</p>
-                  <p>{formik.errors.role}</p>
-                </div>
-              ) : null}
-
               {formik.values.role && (
                 <>
                   <div className='mb-4'>
                     <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
+                      className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='first_name'
                     >
                       First Name
                     </label>
 
                     <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='first_name'
                       type='text'
                       placeholder='User FirstName'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.first_name}
+                      maxLength='30'
                     />
                   </div>
 
                   {(formik.touched.first_name && formik.errors.first_name) ||
                   (tryToPass && formik.errors.first_name) ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.first_name}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.first_name} />
                   ) : null}
 
                   <div className='mb-4'>
                     <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
+                      className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='last_name'
                     >
                       Last Name
                     </label>
 
                     <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='last_name'
                       type='text'
                       placeholder='User LastName'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.last_name}
+                      maxLength='30'
                     />
                   </div>
 
                   {(formik.touched.last_name && formik.errors.last_name) ||
                   (tryToPass && formik.errors.last_name) ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.last_name}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.last_name} />
                   ) : null}
 
                   <div className='mb-4'>
                     <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
+                      className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='email'
                     >
                       Email
                     </label>
 
                     <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='email'
                       type='email'
                       placeholder='User Email'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.email}
+                      maxLength='50'
                     />
                   </div>
 
                   {(formik.touched.email && formik.errors.email) ||
                   (tryToPass && formik.errors.email) ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.email}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.email} />
                   ) : null}
 
                   <div className='mb-4'>
                     <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
+                      className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='password'
                     >
                       Password
                     </label>
 
                     <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='password'
                       type='password'
                       placeholder='User Password'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.password}
+                      maxLength='60'
                     />
                   </div>
 
                   {(formik.touched.password && formik.errors.password) ||
                   (tryToPass && formik.errors.password) ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.password}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.password} />
                   ) : null}
 
                   <div className='mb-4'>
                     <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
+                      className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='re_password'
                     >
                       Confirm Password
                     </label>
 
                     <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                      className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='re_password'
                       type='password'
                       placeholder='Confirm Password'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.re_password}
+                      maxLength='60'
                     />
                   </div>
 
                   {(formik.touched.re_password && formik.errors.re_password) ||
                   (tryToPass && formik.errors.re_password) ? (
-                    <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                      <p className='font-bold'>Error</p>
-                      <p>{formik.errors.re_password}</p>
-                    </div>
+                    <ErrorForm description={formik.errors.re_password} />
                   ) : null}
                 </>
               )}
 
               {!toSecPart && formik.values.role && (
                 <button
-                  className='bg-gray-800 text-center w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
+                  className='uppercas mt-5 w-full bg-gray-800 p-2 text-center text-white hover:cursor-pointer hover:bg-gray-900'
                   value='Continue'
                   onClick={handleToSecondPart}
                 >
@@ -371,8 +265,8 @@ const Register = () => {
               )}
 
               {(!formik.values.role || !toSecPart) && (
-                <div className='w-full mt-5 p-1 text-center'>
-                  <p className='block text-gray-700 text-[1.1rem] font-bold'>
+                <div className='mt-5 w-full p-1 text-center'>
+                  <p className='block text-[1.1rem] font-bold text-gray-700'>
                     Already have an{' '}
                     <Link href='login'>
                       <span className='text-sky-800'>account</span> ?
@@ -385,23 +279,23 @@ const Register = () => {
         </div>
 
         {formik.values.role && toSecPart && (
-          <div className='flex justify-center mt-5 ml-10'>
+          <div className='ml-10 mt-5 flex justify-center'>
             <div className='w-full max-w-sm'>
               <form
-                className='bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4'
+                className='mb-4 rounded bg-white px-8 pb-8 pt-6 shadow-md'
                 onSubmit={formik.handleSubmit}
                 style={{ width: '400px' }}
               >
                 <div className='mb-4'>
                   <label
-                    className='block text-gray-700 text-sm font-bold mb-2'
+                    className='mb-2 block text-sm font-bold text-gray-700'
                     htmlFor='phone'
                   >
                     Phone Number
                   </label>
 
                   <input
-                    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                    className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                     id='phone'
                     type='number'
                     placeholder='User Phonenumber'
@@ -412,41 +306,42 @@ const Register = () => {
                 </div>
 
                 {formik.touched.phone && formik.errors.phone ? (
-                  <div className='my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-4'>
-                    <p className='font-bold'>Error</p>
-                    <p>{formik.errors.phone}</p>
-                  </div>
+                  <ErrorForm description={formik.errors.phone} />
                 ) : null}
 
-                {!isLocated && (
-                  <div className='mb-4'>
-                    <label
-                      className='block text-gray-700 text-sm font-bold mb-2'
-                      htmlFor='residenceAddress'
-                    >
-                      Residence Address
-                    </label>
+                <div className='mb-4'>
+                  <label
+                    className='mb-2 block text-sm font-bold text-gray-700'
+                    htmlFor='residenceAddress'
+                  >
+                    Residence Address
+                  </label>
 
-                    <input
-                      className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                      id='residenceAddress'
-                      type='text'
-                      placeholder='User recidence address'
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.residenceAddress}
-                    />
-                  </div>
-                )}
+                  <input
+                    className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+                    id='residenceAddress'
+                    type='text'
+                    placeholder='User recidence address'
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.residenceAddress}
+                    maxLength='50'
+                  />
+                </div>
+
+                {formik.touched.residenceAddress &&
+                formik.errors.residenceAddress ? (
+                  <ErrorForm description={formik.errors.residenceAddress} />
+                ) : null}
 
                 <input
                   type='submit'
-                  className='bg-gray-800 w-full mt-5 p-2 text-white uppercas hover:cursor-pointer hover:bg-gray-900'
+                  className='uppercas mt-5 w-full bg-gray-800 p-2 text-white hover:cursor-pointer hover:bg-gray-900'
                   value='Register'
                 />
 
-                <div className='w-full mt-5 p-2 text-center'>
-                  <p className='block text-gray-700 text-[1.1rem] font-bold'>
+                <div className='mt-5 w-full p-2 text-center'>
+                  <p className='block text-[1.1rem] font-bold text-gray-700'>
                     Already have an{' '}
                     <Link href='login'>
                       <span className='text-sky-800'>account</span> ?
