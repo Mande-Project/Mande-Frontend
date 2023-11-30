@@ -6,6 +6,7 @@ import Worker from '../components/Worker';
 import { workers } from '../assets';
 
 const Dashboard = () => {
+  console.log("wiwdidwi")
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>

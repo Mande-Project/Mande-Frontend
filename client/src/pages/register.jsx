@@ -37,7 +37,7 @@ const Register = () => {
     },
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
-      console.log("submit")
+      console.log('submit');
       const { first_name, last_name, residenceAddress, country, city } = values;
       values.address = `${residenceAddress}, ${city}, ${country}`;
       values.username = `${first_name}_${last_name}`;
@@ -335,7 +335,8 @@ const Register = () => {
                   />
                 </div>
 
-                {formik.touched.residenceAddress && formik.errors.residenceAddress ? (
+                {formik.touched.residenceAddress &&
+                formik.errors.residenceAddress ? (
                   <ErrorForm description={formik.errors.residenceAddress} />
                 ) : null}
 
