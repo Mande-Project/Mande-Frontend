@@ -2,14 +2,14 @@ import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { getJobasAPI, setJobAPI } from '../api/worker';
-import { useAuthStore } from '../store/auth';
 import { toast } from 'react-toastify';
+import { getJobasAPI, setJobAPI } from '../api/worker';
 import { renderToast } from '../components/Toast';
+import { useAuthStore } from '../store/auth';
 
 const chooseJob = () => {
   const [user] = useAuthStore((state) => [state.user]);
-  const [jobsChosen, setJobsChosen] = useState([]);
+  const [jobsChosen, setJobsChosen] = useState('');
   const [message, setMessage] = useState(null);
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
@@ -37,7 +37,7 @@ const chooseJob = () => {
   };
 
   const validateButtonJobs = () => {
-    return jobsChosen.length === 0 ||
+    return jobsChosen === '' ||
       price === '0' ||
       price === '' ||
       description === ''
@@ -54,7 +54,7 @@ const chooseJob = () => {
       return false;
     }
     if (
-      jobsChosen.length !== 0 &&
+      jobsChosen !== '' &&
       price !== '0' &&
       price !== '' &&
       description !== '' &&
@@ -74,16 +74,19 @@ const chooseJob = () => {
       price: auxPrice,
       description,
     };
-    return values
+    return values;
   };
 
   const onHandleButton = async () => {
     if (validateValues()) {
       const id = toast.loading('Loading...');
-      const res = await setJobAPI(getValues())
-      console.log(res)
-      if(res){
+      const res = await setJobAPI(getValues());
+      if (res) {
         renderToast(id, res.type, res.message, () => {});
+        if (res.type === 'success') {
+          setPrice('');
+          setDescription('');
+        }
       }
     }
     // Swal.fire('Successfully', 'The jobs was register correctly', 'success');
@@ -131,7 +134,8 @@ const chooseJob = () => {
 
           <input
             className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
-            id='hours'
+            id='price'
+            value={price}
             type='number'
             placeholder='Number of Hours'
             onChange={(e) => setPrice(e.target.value)}
@@ -150,6 +154,7 @@ const chooseJob = () => {
             className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
             id='description'
             type='text'
+            value={description}
             placeholder='Description'
             onChange={(e) => setDescription(e.target.value)}
           />
