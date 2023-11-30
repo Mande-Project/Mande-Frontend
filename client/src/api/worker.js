@@ -14,7 +14,7 @@ export const setJobAPI = async (body) => {
   try {
     const res = await apiWithoutAutorization.post("mande_app/worker_job/",body)
     const {data} = res
-    return data
+    return { type: 'success', message: data };
   } catch (err) {
     const errorResponse = (err.request.response);
     if(errorResponse){
