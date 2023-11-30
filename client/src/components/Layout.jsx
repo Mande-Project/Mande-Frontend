@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Fragment, Suspense } from 'react';
+import React, { Fragment, Suspense} from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header';

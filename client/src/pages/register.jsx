@@ -37,9 +37,11 @@ const Register = () => {
     },
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
+      console.log("submit")
       const { first_name, last_name, residenceAddress, country, city } = values;
-      values.address = `${residenceAddress}, ${country}, ${city}`;
+      values.address = `${residenceAddress}, ${city}, ${country}`;
       values.username = `${first_name}_${last_name}`;
+      values.phone = values.phone.toString();
       handleSignUp(values);
     },
   });

@@ -2,27 +2,27 @@ import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import Swal from 'sweetalert2';
-
-const options = [
-  { id: 'programmer-ia', name: 'Programmer IA' },
-  { id: 'programmer-web', name: 'Programmer Web' },
-  { id: 'programmer-mobile', name: 'Programmer Mobile' },
-  { id: 'programmer-desktop', name: 'Programmer Desktop' },
-  { id: 'programmer-embedded', name: 'Programmer Embedded' },
-  { id: 'programmer-game', name: 'Programmer Game' },
-  { id: 'programmer-graphics', name: 'Programmer Graphics' },
-  { id: 'programmer-network', name: 'Programmer Network' },
-];
+import { getJobasAPI, setJobAPI } from '../api/worker';
+import { useAuthStore } from '../store/auth';
+import { toast } from 'react-toastify';
+import { renderToast } from '../components/Toast';
 
 const chooseJob = () => {
+  const [user] = useAuthStore((state) => [state.user]);
   const [jobsChosen, setJobsChosen] = useState([]);
   const [message, setMessage] = useState(null);
   const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    console.log(jobsChosen);
-  }, [jobsChosen]);
+    const getOptions = async () => {
+      const res = await getJobasAPI();
+      const { data } = res;
+      setOptions(data);
+    };
+    getOptions();
+  }, []);
 
   const selectJob = (jobs) => {
     setJobsChosen(jobs);
@@ -37,30 +37,56 @@ const chooseJob = () => {
   };
 
   const validateButtonJobs = () => {
-    return jobsChosen.length === 0 || price === '0' || price === ''
+    return jobsChosen.length === 0 ||
+      price === '0' ||
+      price === '' ||
+      description === ''
       ? 'opacity-50 cursor-not-allowed'
       : '';
   };
 
-  const onHandleButton = () => {
-    // Validate
-    //Intentamos pasar price a entero y verificamos que sea mayor a 0
+  const validateValues = () => {
     if (parseInt(price) <= 0) {
       setMessage('The price must be greater than 0');
       setTimeout(() => {
         setMessage(null);
       }, 8000);
-      return;
+      return false;
     }
-    if (jobsChosen.length !== 0 && price !== '0' && price !== '') {
-      console.log('Siuuu');
-
-      // Redirect
-      // router.push('/pedidos');
-
-      // Show alert
-      Swal.fire('Successfully', 'The jobs was register correctly', 'success');
+    if (
+      jobsChosen.length !== 0 &&
+      price !== '0' &&
+      price !== '' &&
+      description !== '' &&
+      user.id !== null
+    ) {
+      return true;
     }
+
+    return false;
+  };
+
+  const getValues = () => {
+    const auxPrice = parseInt(price);
+    const values = {
+      id_user: user.id,
+      id_job: jobsChosen,
+      price: auxPrice,
+      description,
+    };
+    return values
+  };
+
+  const onHandleButton = async () => {
+    if (validateValues()) {
+      const id = toast.loading('Loading...');
+      const res = await setJobAPI(getValues())
+      console.log(res)
+      if(res){
+        renderToast(id, res.type, res.message, () => {});
+      }
+    }
+    // Swal.fire('Successfully', 'The jobs was register correctly', 'success');
   };
 
   return (
@@ -79,7 +105,7 @@ const chooseJob = () => {
         <div>
           <label
             className='mb-2 block text-sm font-bold text-gray-700'
-            htmlFor='name'
+            htmlFor='job'
           >
             Job
           </label>
@@ -87,7 +113,7 @@ const chooseJob = () => {
           <Select
             options={options} //this are the options of the db
             isMulti={false}
-            onChange={(option) => selectJob(option)}
+            onChange={(option) => selectJob(option.id)}
             getOptionLabel={(options) => options.name}
             getOptionValue={(options) => options.id}
             placeholder='Select the job or the jobs that you will do'
@@ -98,7 +124,7 @@ const chooseJob = () => {
         <div className='my-4'>
           <label
             className='mb-2 block text-sm font-bold text-gray-700'
-            htmlFor='name'
+            htmlFor='hours'
           >
             Price
           </label>
@@ -109,6 +135,23 @@ const chooseJob = () => {
             type='number'
             placeholder='Number of Hours'
             onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+
+        <div className='my-4'>
+          <label
+            className='mb-2 block text-sm font-bold text-gray-700'
+            htmlFor='description'
+          >
+            Description
+          </label>
+
+          <input
+            className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+            id='description'
+            type='text'
+            placeholder='Description'
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 

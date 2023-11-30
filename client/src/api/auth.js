@@ -45,20 +45,37 @@ export const loginRequest = async (body) => {
     return { type: 'success', message: 'Accessing...' }
   } catch (err) {
     loginFail()
-    const message = JSON.parse(err.request.response).detail;
-    return { type: 'error', message };
+    if (err.request && err.request.response && !err.request.response.includes('Bad Request (400)')) {
+      const errorResponse = JSON.parse(err.request.response);
+      if (errorResponse && errorResponse.detail) {
+        const message = errorResponse.detail;
+        return { type: 'error', message };
+      }
+    }
+    return { type: 'error', message: 'An error occurred' };
   }
 }
 
 
 export const signupRequest = async (body) => {
   try {
-    const res = await apiWithoutAutorization.post("api_users/users/", body)
+    const res = await apiWithoutAutorization.ost("api_users/users/", body)
     signupSuccess(res.data)
     return { type: 'success', message: 'Please check your email...' }
   } catch (err) {
     signupFail()
     try {
+      console.log(body)
+      if(err.request.status === 400)
+      {
+        if(err.request.response){
+          if(err.request.response.includes('custom user with this email already exists.')){
+            return { type: 'error', message: 'This email already exists' };
+          }
+          return { type: 'error', message: err.request.response };
+        }
+        return { type: 'error', message: 'An server error occurred' };
+      }
       if (err.request.status === 500) {
         return { type: 'error', message: 'A server error ocurred' };
       }

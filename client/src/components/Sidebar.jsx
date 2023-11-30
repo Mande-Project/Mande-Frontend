@@ -5,7 +5,6 @@ import React from 'react';
 const Sidebar = () => {
   // Routing hook
   const router = useRouter();
-  console.log(router.pathname);
 
   return (
     <aside className='bg-gray-800 p-5 sm:min-h-screen sm:w-1/3 xl:w-1/5'>
@@ -60,7 +59,7 @@ const Sidebar = () => {
               Notifications
             </Link>
           </li>
-          <li
+          {/* <li
             className={
               router.pathname === '/payments' ? 'bg-blue-800 p-2' : 'p-2'
             }
@@ -68,7 +67,7 @@ const Sidebar = () => {
             <Link href='/payments' className='block text-white'>
               Payments
             </Link>
-          </li>
+          </li> */}
         </nav>
       </div>
     </aside>
