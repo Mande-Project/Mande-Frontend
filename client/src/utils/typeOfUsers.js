@@ -1,5 +1,5 @@
 export const typeOfUsers = [
-  { value: 'worker', label: 'Customer' },
-  { value: 'customer', label: 'Worker' },
+  { value: 'worker', label: 'Worker' },
+  { value: 'customer', label: 'Customer' },
   // { value: 'ADMINISTRADOR', label: 'Administrador' },
 ]

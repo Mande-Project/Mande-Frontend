@@ -59,7 +59,7 @@ export const loginRequest = async (body) => {
 
 export const signupRequest = async (body) => {
   try {
-    const res = await apiWithoutAutorization.ost("api_users/users/", body)
+    const res = await apiWithoutAutorization.post("api_users/users/", body)
     signupSuccess(res.data)
     return { type: 'success', message: 'Please check your email...' }
   } catch (err) {
