@@ -52,9 +52,13 @@ const Header = () => {
 
   return (
     <div className='mb-6 sm:flex sm:h-7 sm:items-end sm:justify-between '>
-      <p className='mr-2 text-lg font-light lg:mb-0'>
-        Bienvenido {`${dataUser.first_name}`}
-      </p>
+      <div className='mr-2 text-lg font-light lg:mb-0'>
+        {dataUser && (
+          <p>
+            Bienvenido {`${dataUser.first_name}`}
+          </p>
+        )}
+      </div>
       {isAuthenticatedUser ? authLinks() : guestLinks()}
     </div>
   );

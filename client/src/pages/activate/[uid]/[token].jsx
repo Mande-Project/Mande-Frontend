@@ -1,6 +1,6 @@
 import { verify } from '@/src/api/auth';
 import Layout from '@/src/components/Layout';
-import showToast from '@/src/components/Toast';
+import {showToast} from '@/src/components/Toast';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
