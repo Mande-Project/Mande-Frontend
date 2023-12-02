@@ -1,7 +1,8 @@
 import Layout from '@/src/components/Layout';
 import Notification from '@/src/components/Notification';
 import PrivateRoute from '@/src/components/PrivateRoute';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getNotificationsUser } from '../api/notifications';
 
 const notifications = [
   {
@@ -39,6 +40,23 @@ const notifications = [
 ];
 
 const Notifications = () => {
+  const [notificationsUser, setNotificationsUser] = useState(null);
+  const [userID, setUserID] = useState(null);
+
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    setUserID(auth.state.user.id);
+  }, []);
+
+  useEffect(() => {
+    if (userID == null) return;
+    const getNotifications = async () => {
+      const res = await getNotificationsUser(userID);
+      setNotificationsUser(res);
+    };
+    getNotifications();
+  }, [userID]);
+
   return (
     <PrivateRoute>
       <Layout>
@@ -56,9 +74,13 @@ const Notifications = () => {
             </thead>
 
             <tbody className='bg-white'>
-              {notifications.map((notification) => (
-                <Notification key={notification.id} notification={notification} />
-              ))}
+              {notificationsUser != null &&
+                notificationsUser.map((notification) => (
+                  <Notification
+                    key={notification.id}
+                    notification={notification}
+                  />
+                ))}
             </tbody>
           </table>
         </div>

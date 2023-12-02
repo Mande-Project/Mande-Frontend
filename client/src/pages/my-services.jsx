@@ -1,7 +1,8 @@
 import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Contract from '../components/Contract';
+import { getServicesUser } from '../api/services';
 
 const myServices = [
   {
@@ -79,6 +80,24 @@ const myServices = [
 ];
 
 const MyServices = () => {
+  const [servicesUser, setServicesUser] = useState(null);
+  const [userID, setUserID] = useState(null);
+
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    setUserID(auth.state.user.id);
+  }, []);
+
+  useEffect(() => {
+    if (userID == null) return;
+    const getServices = async () => {
+      const res = await getServicesUser(userID);
+      const { data } = res;
+      setServicesUser(data);
+    };
+    getServices();
+  }, [userID]);
+
   return (
     <PrivateRoute>
       <Layout>
@@ -97,9 +116,10 @@ const MyServices = () => {
             </thead>
 
             <tbody className='bg-white'>
-              {myServices.map((contract) => (
-                <Contract key={contract.id} contract={contract} />
-              ))}
+              {servicesUser != null &&
+                servicesUser.map((contract) => (
+                  <Contract key={contract.id} contract={contract} />
+                ))}
             </tbody>
           </table>
         </div>
