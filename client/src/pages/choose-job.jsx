@@ -2,14 +2,13 @@ import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { getJobasAPI, setJobAPI } from '../api/worker';
+import Swal from 'sweetalert2';
+import { deleteJobAPI, getJobasAPI, setJobAPI } from '../api/worker';
 import { useAuthStore } from '../store/auth';
-import { toast } from 'react-toastify';
-import { renderToast } from '../components/Toast';
 
 const chooseJob = () => {
   const [user] = useAuthStore((state) => [state.user]);
-  const [jobsChosen, setJobsChosen] = useState([]);
+  const [jobsChosen, setJobsChosen] = useState('');
   const [message, setMessage] = useState(null);
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
@@ -22,6 +21,13 @@ const chooseJob = () => {
       setOptions(data);
     };
     getOptions();
+
+    // const aux = async () => {
+    //   const res = await searchJobAPI(user.id);
+    //   console.log(res);
+    //   console.log(res.message);
+    // }
+    // aux()
   }, []);
 
   const selectJob = (jobs) => {
@@ -37,12 +43,16 @@ const chooseJob = () => {
   };
 
   const validateButtonJobs = () => {
-    return jobsChosen.length === 0 ||
+    return jobsChosen === '' ||
       price === '0' ||
       price === '' ||
       description === ''
       ? 'opacity-50 cursor-not-allowed'
       : '';
+  };
+
+  const validateButtonJobs2 = () => {
+    return jobsChosen === '' ? 'opacity-50 cursor-not-allowed' : '';
   };
 
   const validateValues = () => {
@@ -54,7 +64,7 @@ const chooseJob = () => {
       return false;
     }
     if (
-      jobsChosen.length !== 0 &&
+      jobsChosen !== '' &&
       price !== '0' &&
       price !== '' &&
       description !== '' &&
@@ -66,6 +76,13 @@ const chooseJob = () => {
     return false;
   };
 
+  const validateValues2 = () => {
+    if (jobsChosen !== '' && user.id !== null) {
+      return true;
+    }
+    return false;
+  };
+
   const getValues = () => {
     const auxPrice = parseInt(price);
     const values = {
@@ -74,19 +91,39 @@ const chooseJob = () => {
       price: auxPrice,
       description,
     };
-    return values
+    return values;
   };
 
   const onHandleButton = async () => {
     if (validateValues()) {
-      const id = toast.loading('Loading...');
-      const res = await setJobAPI(getValues())
-      console.log(res)
-      if(res){
-        renderToast(id, res.type, res.message, () => {});
+      // const id = toast.loading('Loading...');
+      const res = await setJobAPI(getValues());
+      if (res) {
+        if (res.type === 'success') {
+          Swal.fire('Successfully', res.message);
+          setPrice('');
+          setDescription('');
+        } else {
+          Swal.fire('Error', res.message, 'error');
+        }
       }
     }
-    // Swal.fire('Successfully', 'The jobs was register correctly', 'success');
+  };
+
+  const onHandleButton2 = async () => {
+    if (validateValues2()) {
+      console.log(getValues());
+      const res = await deleteJobAPI(getValues());
+      if (res) {
+        if (res.type === 'success') {
+          Swal.fire('Successfully', res.message);
+          setPrice('');
+          setDescription('');
+        } else {
+          Swal.fire('Error', res.message, 'error');
+        }
+      }
+    }
   };
 
   return (
@@ -131,7 +168,8 @@ const chooseJob = () => {
 
           <input
             className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
-            id='hours'
+            id='price'
+            value={price}
             type='number'
             placeholder='Number of Hours'
             onChange={(e) => setPrice(e.target.value)}
@@ -150,18 +188,28 @@ const chooseJob = () => {
             className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
             id='description'
             type='text'
+            value={description}
             placeholder='Description'
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
-        <button
-          type='button'
-          className={` mt-5 w-full bg-gray-800 p-2 font-bold uppercase text-white hover:bg-gray-900 ${validateButtonJobs()} `}
-          onClick={() => onHandleButton()}
-        >
-          Register Jobs
-        </button>
+        <div className='flex gap-5'>
+          <button
+            type='button'
+            className={` mt-5 w-full bg-gray-800 p-2 font-bold uppercase text-white hover:bg-gray-900 ${validateButtonJobs()} `}
+            onClick={() => onHandleButton()}
+          >
+            Register Jobs
+          </button>
+          <button
+            type='button'
+            className={` mt-5 w-full bg-red-800 p-2 font-bold uppercase text-white hover:bg-red-900 ${validateButtonJobs2()} `}
+            onClick={() => onHandleButton2()}
+          >
+            Desactive Job
+          </button>
+        </div>
       </Layout>
     </PrivateRoute>
   );
