@@ -5,6 +5,7 @@ import { useAuthStore } from '@/src/store/auth';
 import '@testing-library/jest-dom';
 import Header from '@/src/components/Header';
 
+
 jest.mock("next/navigation", () => ({
   useRouter() {
     return {
