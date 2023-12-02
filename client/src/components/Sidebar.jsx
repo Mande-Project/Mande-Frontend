@@ -14,58 +14,62 @@ const Sidebar = () => {
         </div>
 
         <nav className='mt-5 list-none'>
-          <li
-            className={
-              router.pathname === '/dashboard' ? 'bg-blue-800 p-2' : 'p-2'
-            }
-          >
-            <Link href='/dashboard' className='block text-white'>
-              Dashboard
-            </Link>
-          </li>
-          <li
-            className={
-              router.pathname === '/choose-job' ? 'bg-blue-800 p-2' : 'p-2'
-            }
-          >
-            <Link href='/choose-job' className='block text-white'>
-              Choose Job
-            </Link>
-          </li>
-          <li
-            className={
-              router.pathname === '/hire-services' ? 'bg-blue-800 p-2' : 'p-2'
-            }
-          >
-            <Link href='/hire-services' className='block text-white'>
-              Hire Services
-            </Link>
-          </li>
-          <li
-            className={
-              router.pathname === '/my-services' ? 'bg-blue-800 p-2' : 'p-2'
-            }
-          >
-            <Link href='/my-services' className='block text-white'>
-              My Services
-            </Link>
-          </li>
-          <li
-            className={
-              router.pathname === '/notifications' ? 'bg-blue-800 p-2' : 'p-2'
-            }
-          >
-            <Link href='/notifications' className='block text-white'>
-              Notifications
-            </Link>
-          </li>
+          <div>
+            <li
+              className={
+                router.pathname === '/dashboard' ? 'bg-blue-800 p-2' : 'p-2'
+              }
+            >
+              <Link href='/dashboard' className='block text-white'>
+                Dashboard
+              </Link>
+            </li>
+            <li
+              className={
+                router.pathname === '/hire-services' ? 'bg-blue-800 p-2' : 'p-2'
+              }
+            >
+              <Link href='/hire-services' className='block text-white'>
+                Hire Services
+              </Link>
+            </li>
+            <li
+              className={
+                router.pathname === '/my-services' ? 'bg-blue-800 p-2' : 'p-2'
+              }
+            >
+              <Link href='/my-services' className='block text-white'>
+                My Services
+              </Link>
+            </li>
+            <li
+              className={
+                router.pathname === '/notifications' ? 'bg-blue-800 p-2' : 'p-2'
+              }
+            >
+              <Link href='/notifications' className='block text-white'>
+                Notifications
+              </Link>
+            </li>
+          </div>
+          <div className='mt-10'> 
+            <li
+              className={
+                router.pathname === '/choose-job' ? 'bg-blue-800 p-2' : 'p-2'
+              }
+            >
+              <Link href='/choose-job' className='block text-white'>
+                Choose Job
+              </Link>
+            </li>
+          </div>
           {/* <li
             className={
               router.pathname === '/payments' ? 'bg-blue-800 p-2' : 'p-2'
             }
-          >
+            >
             <Link href='/payments' className='block text-white'>
-              Payments
+            Payments
             </Link>
           </li> */}
         </nav>
