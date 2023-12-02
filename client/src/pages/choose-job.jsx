@@ -2,9 +2,8 @@ import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { toast } from 'react-toastify';
-import { getJobasAPI, setJobAPI } from '../api/worker';
-import { renderToast } from '../components/Toast';
+import Swal from 'sweetalert2';
+import { deleteJobAPI, getJobasAPI, setJobAPI } from '../api/worker';
 import { useAuthStore } from '../store/auth';
 
 const chooseJob = () => {
@@ -22,6 +21,13 @@ const chooseJob = () => {
       setOptions(data);
     };
     getOptions();
+
+    // const aux = async () => {
+    //   const res = await searchJobAPI(user.id);
+    //   console.log(res);
+    //   console.log(res.message);
+    // }
+    // aux()
   }, []);
 
   const selectJob = (jobs) => {
@@ -45,6 +51,10 @@ const chooseJob = () => {
       : '';
   };
 
+  const validateButtonJobs2 = () => {
+    return jobsChosen === '' ? 'opacity-50 cursor-not-allowed' : '';
+  };
+
   const validateValues = () => {
     if (parseInt(price) <= 0) {
       setMessage('The price must be greater than 0');
@@ -66,6 +76,13 @@ const chooseJob = () => {
     return false;
   };
 
+  const validateValues2 = () => {
+    if (jobsChosen !== '' && user.id !== null) {
+      return true;
+    }
+    return false;
+  };
+
   const getValues = () => {
     const auxPrice = parseInt(price);
     const values = {
@@ -79,17 +96,34 @@ const chooseJob = () => {
 
   const onHandleButton = async () => {
     if (validateValues()) {
-      const id = toast.loading('Loading...');
+      // const id = toast.loading('Loading...');
       const res = await setJobAPI(getValues());
       if (res) {
-        renderToast(id, res.type, res.message, () => {});
         if (res.type === 'success') {
+          Swal.fire('Successfully', res.message);
           setPrice('');
           setDescription('');
+        } else {
+          Swal.fire('Error', res.message, 'error');
         }
       }
     }
-    // Swal.fire('Successfully', 'The jobs was register correctly', 'success');
+  };
+
+  const onHandleButton2 = async () => {
+    if (validateValues2()) {
+      console.log(getValues());
+      const res = await deleteJobAPI(getValues());
+      if (res) {
+        if (res.type === 'success') {
+          Swal.fire('Successfully', res.message);
+          setPrice('');
+          setDescription('');
+        } else {
+          Swal.fire('Error', res.message, 'error');
+        }
+      }
+    }
   };
 
   return (
@@ -160,13 +194,22 @@ const chooseJob = () => {
           />
         </div>
 
-        <button
-          type='button'
-          className={` mt-5 w-full bg-gray-800 p-2 font-bold uppercase text-white hover:bg-gray-900 ${validateButtonJobs()} `}
-          onClick={() => onHandleButton()}
-        >
-          Register Jobs
-        </button>
+        <div className='flex gap-5'>
+          <button
+            type='button'
+            className={` mt-5 w-full bg-gray-800 p-2 font-bold uppercase text-white hover:bg-gray-900 ${validateButtonJobs()} `}
+            onClick={() => onHandleButton()}
+          >
+            Register Jobs
+          </button>
+          <button
+            type='button'
+            className={` mt-5 w-full bg-red-800 p-2 font-bold uppercase text-white hover:bg-red-900 ${validateButtonJobs2()} `}
+            onClick={() => onHandleButton2()}
+          >
+            Desactive Job
+          </button>
+        </div>
       </Layout>
     </PrivateRoute>
   );

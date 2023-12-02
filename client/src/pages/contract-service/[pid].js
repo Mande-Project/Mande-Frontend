@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import { allServices } from '@/src/assets'
+import { contractServiceAPI, getPeopleJobsAPI } from '@/src/api/services'
 import Layout from '@/src/components/Layout'
 import PrivateRoute from '@/src/components/PrivateRoute'
+import { useAuthStore } from '@/src/store/auth'
 import { Badge, Dialog, Flex, Separator } from '@radix-ui/themes'
 import { useFormik } from 'formik'
 import { useRouter } from 'next/router'
@@ -11,14 +12,19 @@ import * as Yup from 'yup'
 
 const HireWorker = () => {
   const router = useRouter()
+  const [user] = useAuthStore((state) => [state.user]);
   const { query } = router
   const [service, setService] = useState({})
 
   useEffect(() => {
     if (router.query && router.query.pid) {
-      const { pid } = router.query
-      const getService = allServices.filter(service => service.id === parseInt(pid))[0]
-      setService(getService)
+      const getServices = async () => {
+        const { id_worker_job } = router.query
+        const res = await getPeopleJobsAPI(user.id);
+        const getService = res.filter((service) => service.id_worker_job === parseInt(id_worker_job))[0];
+        setService(getService)
+      };
+      getServices();
     }
   }, [query])
 
@@ -29,7 +35,7 @@ const HireWorker = () => {
     }, validationSchema: Yup.object({
       hours: Yup.number()
         .positive('Hours must be positive')
-        .required('Hours are required'),
+        .required('Hours are required or are bad formatted'),
       descriptionForm: Yup.string()
         .max(200, 'Description must be a maximum of 200 characters')
         .required('Description is required'),
@@ -55,10 +61,11 @@ const HireWorker = () => {
   };
 
   const showDistance = (distance) => {
-    return Math.round(parseFloat(distance));
+    const formattedDistance = (parseFloat(distance) / 1000).toFixed(2);
+    return formattedDistance;
   };
 
-  const handleButtonAccept = () => {
+  const handleButtonAccept = (values) => {
     return (
       <Dialog.Close>
         {Swal.fire({
@@ -71,13 +78,25 @@ const HireWorker = () => {
           cancelButtonText: 'No, Cancel'
         }).then(async (result) => {
           if (result.value) {
-            console.log("Contratado")
-            await Swal.fire(
-              'Hired!',
-              'The service has been hired.',
-              'success'
-            )
-            router.push('/hire-services')
+            const contractService = async () => {
+              const body = {
+                id_customer: user.id,
+                id_worker_job: service.id_worker_job,
+                hours: values.hours,
+                cost: 2422,
+                description: values.descriptionForm
+              }
+              const res = await contractServiceAPI(body)
+              if (res) {
+                if (res.type === 'success') {
+                  Swal.fire('Hired!', res.message, 'success');
+                } else {
+                  Swal.fire('Error!', res.message, 'error');
+                }
+              }
+            }
+            contractService()
+            // router.push('/hire-services')
           }
         })}
       </Dialog.Close>
@@ -89,7 +108,8 @@ const HireWorker = () => {
       <Layout>
         <h1 className="text-2xl text-gray-800 font-light">Hire Service</h1>
 
-        {Object.keys(service).length !== 0 && (
+
+        {Object.keys(service).length === 0 ? <div className='mt-5'>Cargando...</div> : (
           <div className="flex justify-center mt-5">
             <div className="w-full max-w-lg">
 
@@ -104,23 +124,40 @@ const HireWorker = () => {
                   {showBadgeRating(service.rating)}
                 </div>
 
+                <div className='flex justify-between'>
+
+                  <div className="mb-4 flex">
+                    <label className="block text-gray-700 text-lg  mb-2">
+                      <span className='font-bold'>Price: </span>
+                      ${service.price}
+                    </label>
+                  </div>
+
+                  <div className="mb-4 flex">
+                    <label className="block text-gray-700 text-lg  mb-2">
+                      <span className='font-bold'>Distance: </span>
+                      {showDistance(service.distance)} km
+                    </label>
+                  </div>
+                </div>
+
                 <div className="mb-4 flex">
                   <label className="block text-gray-700 text-lg  mb-2">
-                    <span className='font-bold'>Price: </span>
-                    ${service.price}
+                    <span className='font-bold'>WorkerName: </span> {service.first_name} {service.last_name}
                   </label>
                 </div>
 
                 <div className="mb-4 flex">
                   <label className="block text-gray-700 text-lg  mb-2">
-                    <span className='font-bold'>WorkerName: </span> {service.workerName.charAt(0).toUpperCase() + service.workerName.slice(1)}
+                    <span className='font-bold'>Phone: </span>
+                    ${service.phone}
                   </label>
                 </div>
 
                 <div className="mb-4 flex">
                   <label className="block text-gray-700 text-lg  mb-2">
-                    <span className='font-bold'>Distance: </span>
-                    {showDistance(service.distance)} km
+                    <span className='font-bold'>Email: </span>
+                    {service.email}
                   </label>
                 </div>
 

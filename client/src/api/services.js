@@ -1,0 +1,29 @@
+import { apiWithoutAutorization } from "../libs/axios";
+
+export const getPeopleJobsAPI = async (id_user) => {
+  try {
+    const res = await apiWithoutAutorization.get(`/mande_app/worker_job/?id_user=${id_user}`)
+    const { data } = res.data
+    return data;
+  } catch (err) {
+    const errorResponse = (err.request.response);
+    if (errorResponse) {
+      return { type: 'error', message: errorResponse };
+    }
+  }
+}
+
+export const contractServiceAPI = async (body) => {
+  try {
+    const res = await apiWithoutAutorization.post('mande_app/services/', body
+    )
+    console.log(res)
+  } catch (err) {
+    if (err.request) {
+      const errorResponse = (err.request.response);
+      if (errorResponse) {
+        return { type: 'error', message: errorResponse };
+      }
+    }
+  }
+}

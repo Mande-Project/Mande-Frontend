@@ -1,13 +1,24 @@
 import { Badge, Dialog, Flex, Text } from '@radix-ui/themes';
 import Router from 'next/router';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const Service = ({ service }) => {
-  const { id, workerName, job, distance, rating, price, description } = service;
+  const {
+    id_worker_job,
+    job,
+    rating,
+    price,
+    first_name,
+    last_name,
+    distance,
+    description,
+    email,
+    phone,
+  } = service;
 
   const showBadgeRating = () => {
-    if (rating === null) {
+    if (rating === 0) {
       return <Badge color='gray'>Not rated yet</Badge>;
     }
     if (rating >= 4) {
@@ -21,23 +32,42 @@ const Service = ({ service }) => {
     }
   };
 
+  const showBadgeRating2 = () => {
+    if (rating === 0) {
+      return <Badge color='gray'>Not rated yet</Badge>;
+    }
+    if (rating >= 4) {
+      return <Badge color='green'>{rating}</Badge>;
+    }
+    if (rating >= 2) {
+      return <Badge color='yellow'> {rating}</Badge>;
+    }
+    if (rating >= 0) {
+      return <Badge color='red'> {rating}</Badge>;
+    }
+  };
+
   const showDistance = (distance) => {
-    return Math.round(parseFloat(distance));
+    const formattedDistance = (parseFloat(distance) / 1000).toFixed(2);
+    return formattedDistance;
   };
 
   const handleContractService = () => {
     Router.push({
       pathname: '/contract-service/[id]',
-      query: { id },
+      query: { id_worker_job },
     });
   };
 
   return (
     <tr>
       <td className='border px-4 py-2'>{job}</td>
-      <td className='border px-4 py-2'>{workerName}</td>
+      <td className='border px-4 py-2'>
+        {first_name} {last_name}
+      </td>
       <td className='border px-4 py-2'>{showDistance(distance)} km</td>
       <td className='border px-4 py-2'>${price}</td>
+      <td className='border px-4 py-2'>{showBadgeRating2()}</td>
       <td className='border px-4 py-2'>
         <Dialog.Root>
           <Dialog.Trigger>
@@ -77,13 +107,31 @@ const Service = ({ service }) => {
                 <Text as='div' size='2' mb='1' weight='bold'>
                   Worker Name
                 </Text>
-                <Text>{workerName}</Text>
+                <Text>
+                  {first_name} {last_name}
+                </Text>
               </label>
+              <div className='flex gap-10'>
+                <label>
+                  <Text as='div' size='2' mb='1' weight='bold'>
+                    Worker Phone
+                  </Text>
+                  <Text>
+                    {phone}
+                  </Text>
+                </label>
+                <label>
+                  <Text as='div' size='2' mb='1' weight='bold'>
+                    Worker Email
+                  </Text>
+                  <Text>{email}</Text>
+                </label>
+              </div>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
                   Distance
                 </Text>
-                <Text>{distance}</Text>
+                <Text>{showDistance(distance)} km</Text>
               </label>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
