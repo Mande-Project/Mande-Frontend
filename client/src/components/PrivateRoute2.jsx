@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute2 = ({ children }) => {
   const router = useRouter();
   const [isAuthenticatedUser, setIsAuthenticatedUser] = useState(false);
 
   useEffect(() => {
     const isAuthenticated = useAuthStore.getState().isAuthenticated;
     setIsAuthenticatedUser(isAuthenticated);
-    if (!isAuthenticated) {
-      router.push('/login');
+    if (isAuthenticated) {
+      router.push('/dashboard');
     }
   }, []);
 
-  return <>{isAuthenticatedUser ? <>{children}</> : null}</>;
+  return <>{!isAuthenticatedUser ? <>{children}</> : null}</>;
 };
 
-PrivateRoute.propTypes = {
+PrivateRoute2.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default PrivateRoute;
+export default PrivateRoute2;

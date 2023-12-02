@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import React from 'react';
+import PrivateRoute2 from '../components/PrivateRoute2';
 
 const Index = () => {
   return (
+    <PrivateRoute2>
+
     <header className='flex min-h-screen flex-col items-center justify-center bg-gray-800 py-20 text-white'>
       <div className='mb-8 text-center'>
         <h1 className='text-4xl font-extrabold tracking-tight text-gray-200 md:text-6xl'>
@@ -27,6 +30,7 @@ const Index = () => {
         </Link>
       </div>
     </header>
+    </PrivateRoute2>
   );
 };
 

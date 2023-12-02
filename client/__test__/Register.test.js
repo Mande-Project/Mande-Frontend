@@ -4,6 +4,17 @@ import "@testing-library/jest-dom"; // Import the jest-dom extensions for expect
 import Register from "../src/pages/register";
 /* eslint-disable no-undef */
 
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
+    };
+  },
+}));
+
 jest.mock("react-toastify", () => ({
   toast: {
     loading: () => "Loading...",
