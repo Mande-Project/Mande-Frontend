@@ -18,6 +18,8 @@ export const contractServiceAPI = async (body) => {
     const res = await apiWithoutAutorization.post('mande_app/services/', body
     )
     console.log(res)
+    const { data } = res
+    return { type: 'success', message: data };
   } catch (err) {
     if (err.request) {
       const errorResponse = (err.request.response);

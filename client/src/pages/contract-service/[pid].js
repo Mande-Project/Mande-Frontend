@@ -80,16 +80,16 @@ const HireWorker = () => {
           if (result.value) {
             const contractService = async () => {
               const body = {
-                id_customer: user.id,
+                id_user: user.id,
                 id_worker_job: service.id_worker_job,
                 hours: values.hours,
-                cost: 2422,
                 description: values.descriptionForm
               }
               const res = await contractServiceAPI(body)
               if (res) {
                 if (res.type === 'success') {
                   Swal.fire('Hired!', res.message, 'success');
+                  router.push('/hire-services')
                 } else {
                   Swal.fire('Error!', res.message, 'error');
                 }
