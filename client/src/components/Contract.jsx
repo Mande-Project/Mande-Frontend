@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { updateServiceAPI } from '../api/services';
 
 const Contract = ({ contract }) => {
-  const [ratingM, setRatingM] = useState(null);
+  const [ratingM, setRatingM] = useState('');
   let {
     id_service,
     date,
@@ -58,7 +58,7 @@ const Contract = ({ contract }) => {
   };
 
   const handleFinishContract = () => {
-    if (ratingM === null || isNaN(ratingM))  {
+    if (ratingM === '' || isNaN(ratingM))  {
       Swal.fire(
         'Error',
         'Please add a rating before finishing the contract, it must be a number',
@@ -172,6 +172,7 @@ const Contract = ({ contract }) => {
                 <div>
                   <label htmlFor='rating'>Rating:</label>
                   <input
+                    className='mt-1 w-5/6 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
                     type='number'
                     id='rating'
                     name='rating'
