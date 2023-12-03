@@ -29,7 +29,24 @@ export const contractServiceAPI = async (body) => {
   try {
     const res = await apiWithoutAutorization.post('mande_app/services/', body
     )
-    console.log(res)
+    console.log('contractServiceAPI: ',res)
+    const { data } = res
+    return { type: 'success', message: data };
+  } catch (err) {
+    if (err.request) {
+      const errorResponse = (err.request.response);
+      if (errorResponse) {
+        return { type: 'error', message: errorResponse };
+      }
+    }
+  }
+}
+
+export const updateServiceAPI = async (body) => {
+  try {
+    const res = await apiWithoutAutorization.patch('mande_app/services/', body
+    )
+    console.log('contractServiceAPI: ',res)
     const { data } = res
     return { type: 'success', message: data };
   } catch (err) {

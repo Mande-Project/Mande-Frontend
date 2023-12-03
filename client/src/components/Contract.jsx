@@ -1,21 +1,25 @@
 import { Badge, Dialog, Flex, Text } from '@radix-ui/themes';
-import React from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
 import PropTypes from 'prop-types';
+import { updateServiceAPI } from '../api/services';
 
 const Contract = ({ contract }) => {
-  const {
-    // id,
+  const [ratingM, setRatingM] = useState(null);
+  let {
+    id_service,
     date,
-    clientName,
-    workerName,
+    c_first_name,
+    c_last_name,
+    w_first_name,
+    w_last_name,
     job,
     description,
-    amount,
+    cost,
     rating,
     paid,
-    finished,
+    status,
   } = contract;
 
   const showBadgeRating = () => {
@@ -43,25 +47,47 @@ const Contract = ({ contract }) => {
   };
 
   const showBadgeFinished = () => {
-    if (finished) {
+    if (status === 'F') {
       return <Badge color='green'>Finished</Badge>;
     }
-    if (!finished) {
-      return <Badge color='red'>Not finished</Badge>;
+    if (status === 'A') {
+      return <Badge color='yellow'>Active</Badge>;
+    } else {
+      return <Badge color='gray'>Cancelled</Badge>;
     }
   };
 
   const handleFinishContract = () => {
-    console.log('ieie');
+    if (ratingM === null || isNaN(ratingM))  {
+      Swal.fire(
+        'Error',
+        'Please add a rating before finishing the contract, it must be a number',
+        'error',
+      );
+      return;
+    }
+    
+    const finishedContract = {
+      id_service: id_service,
+      status: 'F',
+      rating: ratingM,
+    }
+    
+    const getServices = async () => {
+      await updateServiceAPI(finishedContract);
+    };
+    getServices();
     Swal.fire('Successfully', 'The contract was finished correctly', 'success');
+
+    window.location.reload();
   };
 
   return (
     <tr>
       <td className='border px-4 py-2'>{date}</td>
       <td className='border px-4 py-2'>{job}</td>
-      <td className='border px-4 py-2'>{clientName}</td>
-      <td className='border px-4 py-2'>{workerName}</td>
+      <td className='border px-4 py-2'>{w_first_name + ' ' + w_last_name}</td>
+      <td className='border px-4 py-2'>{c_first_name + ' ' + c_last_name}</td>
       <td className='border px-4 py-2'>
         <Dialog.Root>
           <Dialog.Trigger>
@@ -105,13 +131,13 @@ const Contract = ({ contract }) => {
                 <Text as='div' size='2' mb='1' weight='bold'>
                   Client Name
                 </Text>
-                <Text>{clientName}</Text>
+                <Text>{w_first_name + ' ' + w_last_name}</Text>
               </label>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
                   Worker Name
                 </Text>
-                <Text>{workerName}</Text>
+                <Text>{c_first_name + ' ' + c_last_name}</Text>
               </label>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
@@ -129,7 +155,7 @@ const Contract = ({ contract }) => {
                 <Text as='div' size='2' mb='1' weight='bold'>
                   Amount
                 </Text>
-                <Text>${amount}</Text>
+                <Text>${cost}</Text>
               </label>
             </Flex>
 
@@ -142,7 +168,19 @@ const Contract = ({ contract }) => {
                   Close
                 </button>
               </Dialog.Close>
-              {!finished && (
+              {status === 'A' && (
+                <div>
+                  <label htmlFor='rating'>Rating:</label>
+                  <input
+                    type='number'
+                    id='rating'
+                    name='rating'
+                    value={ratingM}
+                    onChange={(e) => setRatingM(e.target.value)}
+                  />
+                </div>
+              )}
+              {status === 'A' && (
                 <Dialog.Close>
                   <button
                     type='button'

@@ -134,15 +134,9 @@ const MyServices = () => {
                       filter === 'All' || contract.status === filter,
                   )
                   .map((contract) => (
-                    <Contract key={contract.id} contract={contract} />
+                    <Contract key={contract.id_service} contract={contract} />
                   ))}
             </tbody>
-            {/* <tbody className='bg-white'>
-              {myServices != null &&
-                myServices.map((contract) => (
-                  <Contract key={contract.id} contract={contract} />
-                ))}
-            </tbody> */}
           </table>
         </div>
       </Layout>
