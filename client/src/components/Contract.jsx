@@ -77,9 +77,9 @@ const Contract = ({ contract }) => {
       await updateServiceAPI(finishedContract);
     };
     getServices();
-    Swal.fire('Successfully', 'The contract was finished correctly', 'success');
-
-    window.location.reload();
+    Swal.fire('Successfully', 'The contract was finished correctly', 'success').then(() => {
+      window.location.reload();
+    });
   };
 
   return (
