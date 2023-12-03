@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const Notification = ({ notification }) => {
-  const {  date, subject, message } = notification;
+  const {  date, subject, body } = notification;
 
   const truncateString = (str, num) => {
+    if (!str) {
+      return '';
+    }
     if (str.length <= num) {
       return str;
     }
@@ -16,7 +19,7 @@ const Notification = ({ notification }) => {
     <tr>
       <td className='border px-4 py-2'>{date}</td>
       <td className='border px-4 py-2'>{truncateString(subject, 25)}</td>
-      <td className='border px-4 py-2'>{truncateString(message, 25)}</td>
+      <td className='border px-4 py-2'>{truncateString(body, 25)}</td>
       <td className='border px-4 py-2'>
         <Dialog.Root>
           <Dialog.Trigger>
@@ -57,9 +60,9 @@ const Notification = ({ notification }) => {
               </label>
               <label>
                 <Text as='div' size='2' mb='1' weight='bold'>
-                  Messgae
+                  Message
                 </Text>
-                <Text>{message}</Text>
+                <Text>{body}</Text>
               </label>
             </Flex>
 

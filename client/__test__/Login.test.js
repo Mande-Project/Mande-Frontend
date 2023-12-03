@@ -2,8 +2,8 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom"; // Import the jest-dom extensions for expect
-import Login from "../src/pages/login"; // Adjust the import path to match your project's structure
+import "@testing-library/jest-dom"; 
+import Login from "../src/pages/login"; 
 import { useAuthStore } from "../src/store/auth";
 
 
