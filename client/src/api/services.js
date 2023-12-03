@@ -57,3 +57,18 @@ export const updateServiceAPI = async (body) => {
     }
   }
 }
+
+export const deleteServiceAPI = async (body) => {
+  try {
+    const res = await apiWithoutAutorization.delete('mande_app/services', {data: body})
+    const { data } = res
+    return { type: 'success', message: data };
+  } catch (err) {
+    if (err.request) {
+      const errorResponse = (err.request.response);
+      if (errorResponse) {
+        return { type: 'error', message: errorResponse };
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
 import PropTypes from 'prop-types';
-import { updateServiceAPI } from '../api/services';
+import { deleteServiceAPI, updateServiceAPI } from '../api/services';
 
 const Contract = ({ contract }) => {
   const [ratingM, setRatingM] = useState('');
@@ -52,7 +52,7 @@ const Contract = ({ contract }) => {
     }
     if (status === 'A') {
       return <Badge color='yellow'>Active</Badge>;
-    } 
+    }
     if (status === 'C') {
       return <Badge color='gray'>Cancelled</Badge>;
     }
@@ -100,12 +100,8 @@ const Contract = ({ contract }) => {
   };
 
   const handleCancelContract = () => {
-
-    const cancelContract = {
-      id_service: id_service,
-      status: 'C',
-      rating: 0,
-    };
+    
+    console.log(id_service);
 
     Swal.fire({
       title: 'Are you sure?',
@@ -115,12 +111,15 @@ const Contract = ({ contract }) => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, cancel it!',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        const updateServices = async () => {
-          await updateServiceAPI(cancelContract);
+        const cancelContract = {
+          id_service: id_service
         };
-        updateServices();
+        const cancelServices = async () => {
+          await deleteServiceAPI(cancelContract);
+        };
+        cancelServices();
         Swal.fire(
           'Cancelled!',
           'The contract was cancelled correctly.',
@@ -163,7 +162,7 @@ const Contract = ({ contract }) => {
             </button>
           </Dialog.Trigger>
 
-          <Dialog.Content style={{ maxWidth: 500}}>
+          <Dialog.Content style={{ maxWidth: 500 }}>
             <div className='flex justify-between'>
               <Dialog.Title>Contract</Dialog.Title>
               <div className='flex gap-2'>
