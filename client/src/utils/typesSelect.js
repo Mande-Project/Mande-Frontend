@@ -1,7 +1,7 @@
 export const typeFilterByDistance = [
   { value: 'none', label: 'No filters' },
-  { value: 'asc', label: 'Farthest' },
-  { value: 'desc', label: 'Closest' },
+  { value: 'desc', label: 'Farthest' },
+  { value: 'asc', label: 'Closest' },
 ]
 
 export const typeFilterByPrice = [
@@ -12,6 +12,6 @@ export const typeFilterByPrice = [
 
 export const typeFilterByRating = [
   { value: 'none', label: 'No filters' },
-  { value: 'asc', label: 'Highest rated' },
-  { value: 'desc', label: 'Lowest rated' },
+  { value: 'desc', label: 'Highest rated' },
+  { value: 'asc', label: 'Lowest rated' },
 ]

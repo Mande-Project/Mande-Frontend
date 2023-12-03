@@ -4,8 +4,10 @@ import Swal from 'sweetalert2';
 
 import PropTypes from 'prop-types';
 import { deleteServiceAPI, updateServiceAPI } from '../api/services';
+import { useAuthStore } from '../store/auth';
 
-const Contract = ({ contract }) => {
+const Contract = ({ contract, getMyServices, setServicesUser, setFilter }) => {
+  const [user] = useAuthStore((state) => [state.user]);
   const [ratingM, setRatingM] = useState('');
   let {
     id_service,
@@ -86,21 +88,24 @@ const Contract = ({ contract }) => {
 
         const updateServices = async () => {
           await updateServiceAPI(finishedContract);
+          Swal.fire(
+            'Successfully',
+            'The contract was finished correctly',
+            'success',
+          ).then(() => {
+            setServicesUser(null);
+            console.log(user.id)
+            getMyServices(user.id, setServicesUser);
+            console.log('recarga');
+            setFilter('All');
+          });
         };
         updateServices();
-        Swal.fire(
-          'Successfully',
-          'The contract was finished correctly',
-          'success',
-        ).then(() => {
-          console.log('recarga la página');
-        });
       }
     });
   };
 
   const handleCancelContract = () => {
-    
     console.log(id_service);
 
     Swal.fire({
@@ -114,19 +119,23 @@ const Contract = ({ contract }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const cancelContract = {
-          id_service: id_service
+          id_service: id_service,
         };
         const cancelServices = async () => {
           await deleteServiceAPI(cancelContract);
+          Swal.fire(
+            'Cancelled!',
+            'The contract was cancelled correctly.',
+            'success',
+          ).then(() => {
+            setServicesUser(null);
+            console.log(user.id)
+            getMyServices(user.id, setServicesUser);
+            setFilter('All');
+            console.log('recarga');
+          });
         };
         cancelServices();
-        Swal.fire(
-          'Cancelled!',
-          'The contract was cancelled correctly.',
-          'success',
-        ).then(() => {
-          console.log('recarga la página');
-        });
       }
     });
   };
@@ -263,6 +272,9 @@ const Contract = ({ contract }) => {
 
 Contract.propTypes = {
   contract: PropTypes.object.isRequired,
+  getMyServices: PropTypes.func.isRequired,
+  setServicesUser: PropTypes.func.isRequired,
+  setFilter: PropTypes.func.isRequired,
 };
 
 export default Contract;

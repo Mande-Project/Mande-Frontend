@@ -48,8 +48,11 @@ const Service = ({ service }) => {
   };
 
   const showDistance = (distance) => {
-    const formattedDistance = (parseFloat(distance) / 1000).toFixed(2);
-    return formattedDistance;
+    const formattedDistance = `${(parseFloat(distance) / 1000).toFixed(2)} km`;
+    if (isNaN(distance)) {
+      return 'Actualiza tu direccion';
+    }
+    return formattedDistance
   };
 
   const handleContractService = () => {
@@ -65,7 +68,7 @@ const Service = ({ service }) => {
       <td className='border px-4 py-2'>
         {first_name} {last_name}
       </td>
-      <td className='border px-4 py-2'>{showDistance(distance)} km</td>
+      <td className='border px-4 py-2'>{showDistance(distance)}</td>
       <td className='border px-4 py-2'>${price}</td>
       <td className='border px-4 py-2'>{showBadgeRating2()}</td>
       <td className='border px-4 py-2'>
