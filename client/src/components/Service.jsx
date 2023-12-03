@@ -22,13 +22,13 @@ const Service = ({ service }) => {
       return <Badge color='gray'>Not rated yet</Badge>;
     }
     if (rating >= 4) {
-      return <Badge color='green'>Rating: {rating}</Badge>;
+      return <Badge color='green'>Rating: {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 2) {
-      return <Badge color='yellow'>Rating: {rating}</Badge>;
+      return <Badge color='yellow'>Rating: {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 0) {
-      return <Badge color='red'>Rating: {rating}</Badge>;
+      return <Badge color='red'>Rating: {rating.toFixed(2)}</Badge>;
     }
   };
 
@@ -37,13 +37,13 @@ const Service = ({ service }) => {
       return <Badge color='gray'>Not rated yet</Badge>;
     }
     if (rating >= 4) {
-      return <Badge color='green'>{rating}</Badge>;
+      return <Badge color='green'>{rating.toFixed(2)}</Badge>;
     }
     if (rating >= 2) {
-      return <Badge color='yellow'> {rating}</Badge>;
+      return <Badge color='yellow'> {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 0) {
-      return <Badge color='red'> {rating}</Badge>;
+      return <Badge color='red'> {rating.toFixed(2)}</Badge>;
     }
   };
 
