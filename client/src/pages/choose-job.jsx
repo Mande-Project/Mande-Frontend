@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { deleteJobAPI, getJobasAPI, setJobAPI } from '../api/worker';
 import { useAuthStore } from '../store/auth';
 
-const chooseJob = () => {
+const ChooseJob = () => {
   const [user] = useAuthStore((state) => [state.user]);
   const [jobsChosen, setJobsChosen] = useState('');
   const [message, setMessage] = useState(null);
@@ -21,13 +21,6 @@ const chooseJob = () => {
       setOptions(data);
     };
     getOptions();
-
-    // const aux = async () => {
-    //   const res = await searchJobAPI(user.id);
-    //   console.log(res);
-    //   console.log(res.message);
-    // }
-    // aux()
   }, []);
 
   const selectJob = (jobs) => {
@@ -215,4 +208,4 @@ const chooseJob = () => {
   );
 };
 
-export default chooseJob;
+export default ChooseJob;

@@ -18,13 +18,13 @@ jest.mock('next/router', () => ({
   },
 }));
 
-jest.mock("next/navigation", () => ({
-  useRouter() {
-    return {
-      prefetch: () => null,
-    };
-  },
-}));
+  jest.mock("next/navigation", () => ({
+    useRouter() {
+      return {
+        prefetch: () => null,
+      };
+    },
+  }));
 
 jest.mock("../src/components/Layout.jsx", () => ({
   __esModule: true,

@@ -41,16 +41,3 @@ export const deleteJobAPI = async (body) => {
   }
 }
 
-
-export const searchJobAPI = async (id_user) => {
-  try {
-    const res = await apiWithoutAutorization.delete(`mande_app/worker_job/?id_user=${id_user}`)
-    const { data } = res
-    return { type: 'success', message: data };
-  } catch (err) {
-    const errorResponse = (err.request.response);
-    if (errorResponse) {
-      return { type: 'error', message: errorResponse };
-    }
-  }
-}
