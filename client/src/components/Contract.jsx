@@ -52,13 +52,14 @@ const Contract = ({ contract }) => {
     }
     if (status === 'A') {
       return <Badge color='yellow'>Active</Badge>;
-    } else {
+    } 
+    if (status === 'C') {
       return <Badge color='gray'>Cancelled</Badge>;
     }
   };
 
   const handleFinishContract = () => {
-    if (ratingM === '' || isNaN(ratingM))  {
+    if (ratingM === '' || isNaN(ratingM)) {
       Swal.fire(
         'Error',
         'Please add a rating before finishing the contract, it must be a number',
@@ -66,19 +67,68 @@ const Contract = ({ contract }) => {
       );
       return;
     }
-    
-    const finishedContract = {
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, finish it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const finishedContract = {
+          id_service: id_service,
+          status: 'F',
+          rating: ratingM,
+        };
+
+        const updateServices = async () => {
+          await updateServiceAPI(finishedContract);
+        };
+        updateServices();
+        Swal.fire(
+          'Successfully',
+          'The contract was finished correctly',
+          'success',
+        ).then(() => {
+          console.log('recarga la página');
+        });
+      }
+    });
+  };
+
+  const handleCancelContract = () => {
+
+    const cancelContract = {
       id_service: id_service,
-      status: 'F',
-      rating: ratingM,
-    }
-    
-    const getServices = async () => {
-      await updateServiceAPI(finishedContract);
+      status: 'C',
+      rating: 0,
     };
-    getServices();
-    Swal.fire('Successfully', 'The contract was finished correctly', 'success').then(() => {
-      window.location.reload();
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updateServices = async () => {
+          await updateServiceAPI(cancelContract);
+        };
+        updateServices();
+        Swal.fire(
+          'Cancelled!',
+          'The contract was cancelled correctly.',
+          'success',
+        ).then(() => {
+          console.log('recarga la página');
+        });
+      }
     });
   };
 
@@ -113,7 +163,7 @@ const Contract = ({ contract }) => {
             </button>
           </Dialog.Trigger>
 
-          <Dialog.Content style={{ maxWidth: 450 }}>
+          <Dialog.Content style={{ maxWidth: 500}}>
             <div className='flex justify-between'>
               <Dialog.Title>Contract</Dialog.Title>
               <div className='flex gap-2'>
@@ -172,7 +222,7 @@ const Contract = ({ contract }) => {
                 <div>
                   <label htmlFor='rating'>Rating:</label>
                   <input
-                    className='mt-1 w-5/6 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+                    className='mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
                     type='number'
                     id='rating'
                     name='rating'
@@ -189,6 +239,18 @@ const Contract = ({ contract }) => {
                     onClick={handleFinishContract}
                   >
                     Finish Contract
+                  </button>
+                </Dialog.Close>
+              )}
+
+              {status === 'A' && (
+                <Dialog.Close>
+                  <button
+                    type='button'
+                    className='flex w-full items-center justify-center rounded bg-red-600 px-4 py-2 text-xs font-bold uppercase text-white'
+                    onClick={handleCancelContract}
+                  >
+                    Cancel Contract
                   </button>
                 </Dialog.Close>
               )}

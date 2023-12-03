@@ -46,7 +46,6 @@ export const updateServiceAPI = async (body) => {
   try {
     const res = await apiWithoutAutorization.patch('mande_app/services/', body
     )
-    console.log('contractServiceAPI: ',res)
     const { data } = res
     return { type: 'success', message: data };
   } catch (err) {

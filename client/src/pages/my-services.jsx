@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Contract from '../components/Contract';
 import { getServicesUser } from '../api/services';
 
-
 const MyServices = () => {
   const [servicesUser, setServicesUser] = useState(null);
   const [userID, setUserID] = useState(null);

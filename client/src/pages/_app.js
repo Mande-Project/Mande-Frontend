@@ -1,5 +1,5 @@
 import '@radix-ui/themes/styles.css';
-import Head from "next/head";
+import Head from 'next/head';
 import React from 'react';
 import '../css/spinner.css';
 import './index.css';
@@ -11,9 +11,9 @@ const MyApp = ({ Component, pageProps }) => {
       <Head>
         <title>MANDE</title>
       </Head>
-        <Component {...pageProps} />
+      <Component {...pageProps} />
     </>
-  )
-}
+  );
+};
 
 export default MyApp;
