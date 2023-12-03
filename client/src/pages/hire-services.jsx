@@ -21,21 +21,25 @@ const HireServices = () => {
   const [ratingFilter, setRatingFilter] = useState(typeFilterByRating[0]);
 
   useEffect(() => {
+    console.log(user.id)
     const getServices = async () => {
       const res = await getPeopleJobsAPI(user.id);
-      const filteredServices = res.filter(
-        (service) =>
-          service.worker_available !== false &&
-          service.id_worker_job !== user.id,
-      );
-      if (filteredServices.length > 0) {
-        setAllServices(filteredServices);
-      } else {
-        setAllServices([
-          {
-            message: 'No hay servicios disponibles',
-          },
-        ]);
+      console.log(res)
+      if (res) {
+        const filteredServices = res.filter(
+          (service) =>
+            service.worker_available !== false &&
+            service.id_worker_job !== user.id,
+        );
+        if (filteredServices.length > 0) {
+          setAllServices(filteredServices);
+        } else {
+          setAllServices([
+            {
+              message: 'No hay servicios disponibles',
+            },
+          ]);
+        }
       }
     };
     getServices();

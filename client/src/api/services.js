@@ -1,6 +1,7 @@
 import { apiWithoutAutorization } from '../libs/axios';
 
 export const getServicesUser = async (id) => {
+  console.log(id)
   try {
     const res = await apiWithoutAutorization.get(
       `/mande_app/services/?id_user=${id}`,
@@ -29,7 +30,6 @@ export const contractServiceAPI = async (body) => {
   try {
     const res = await apiWithoutAutorization.post('mande_app/services/', body
     )
-    console.log('contractServiceAPI: ',res)
     const { data } = res
     return { type: 'success', message: data };
   } catch (err) {

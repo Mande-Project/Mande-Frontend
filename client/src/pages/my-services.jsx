@@ -1,28 +1,38 @@
 import Layout from '@/src/components/Layout';
 import PrivateRoute from '@/src/components/PrivateRoute';
 import React, { useEffect, useState } from 'react';
-import Contract from '../components/Contract';
 import { getServicesUser } from '../api/services';
+import Contract from '../components/Contract';
+import { useAuthStore } from '../store/auth';
 
 const MyServices = () => {
+  const [user] = useAuthStore((state) => [state.user]);
   const [servicesUser, setServicesUser] = useState(null);
-  const [userID, setUserID] = useState(null);
   const [filter, setFilter] = useState('All');
 
-  useEffect(() => {
-    const auth = JSON.parse(localStorage.getItem('auth'));
-    setUserID(auth.state.user.id);
-  }, []);
+  const getMyServices = async (id, setServicesUserFunction) => {
+    const res = await getServicesUser(id);
+    if (res) {
+      const { data } = res;
+      setServicesUserFunction(data);
+    }
+  };
 
   useEffect(() => {
-    if (userID == null) return;
+    console.log(servicesUser);
+  }, [servicesUser]);
+
+  useEffect(() => {
     const getServices = async () => {
-      const res = await getServicesUser(userID);
-      const { data } = res;
-      setServicesUser(data);
+      console.log(user.id);
+      const res = await getServicesUser(user.id);
+      if (res) {
+        const { data } = res;
+        setServicesUser(data);
+      }
     };
     getServices();
-  }, [userID]);
+  }, []);
 
   return (
     <PrivateRoute>
@@ -33,15 +43,21 @@ const MyServices = () => {
           <div className='mt-10'>Cargando...</div>
         ) : (
           <>
-            <label htmlFor='serviceType' className='mr-2'>
-              Select a service type
-            </label>
-            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              <option value='All'>All</option>
-              <option value='A'>Active</option>
-              <option value='F'>Finished</option>
-              <option value='C'>Canceled</option>
-            </select>
+            <div className='mt-10'>
+              <div style={{ width: '30%' }} className='flex flex-col gap-3'>
+                <label htmlFor='serviceType'>Select a service type</label>
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className='bg-white p-2'
+                >
+                  <option value='All'>All</option>
+                  <option value='A'>Active</option>
+                  <option value='F'>Finished</option>
+                  <option value='C'>Canceled</option>
+                </select>
+              </div>
+            </div>
 
             <div className='overflow-x-scroll'>
               <table className='w-lg mt-10 table w-full shadow-md'>
@@ -62,7 +78,13 @@ const MyServices = () => {
                         filter === 'All' || contract.status === filter,
                     )
                     .map((contract) => (
-                      <Contract key={contract.id_service} contract={contract} />
+                      <Contract
+                        key={contract.id_service}
+                        contract={contract}
+                        getMyServices={getMyServices}
+                        setServicesUser={setServicesUser}
+                        setFilter={setFilter}
+                      />
                     ))}
                 </tbody>
               </table>

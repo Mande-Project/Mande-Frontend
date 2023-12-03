@@ -22,13 +22,13 @@ const Service = ({ service }) => {
       return <Badge color='gray'>Not rated yet</Badge>;
     }
     if (rating >= 4) {
-      return <Badge color='green'>Rating: {rating}</Badge>;
+      return <Badge color='green'>Rating: {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 2) {
-      return <Badge color='yellow'>Rating: {rating}</Badge>;
+      return <Badge color='yellow'>Rating: {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 0) {
-      return <Badge color='red'>Rating: {rating}</Badge>;
+      return <Badge color='red'>Rating: {rating.toFixed(2)}</Badge>;
     }
   };
 
@@ -37,19 +37,22 @@ const Service = ({ service }) => {
       return <Badge color='gray'>Not rated yet</Badge>;
     }
     if (rating >= 4) {
-      return <Badge color='green'>{rating}</Badge>;
+      return <Badge color='green'>{rating.toFixed(2)}</Badge>;
     }
     if (rating >= 2) {
-      return <Badge color='yellow'> {rating}</Badge>;
+      return <Badge color='yellow'> {rating.toFixed(2)}</Badge>;
     }
     if (rating >= 0) {
-      return <Badge color='red'> {rating}</Badge>;
+      return <Badge color='red'> {rating.toFixed(2)}</Badge>;
     }
   };
 
   const showDistance = (distance) => {
-    const formattedDistance = (parseFloat(distance) / 1000).toFixed(2);
-    return formattedDistance;
+    const formattedDistance = `${(parseFloat(distance) / 1000).toFixed(2)} km`;
+    if (isNaN(distance)) {
+      return 'Actualiza tu direccion';
+    }
+    return formattedDistance
   };
 
   const handleContractService = () => {
@@ -65,7 +68,7 @@ const Service = ({ service }) => {
       <td className='border px-4 py-2'>
         {first_name} {last_name}
       </td>
-      <td className='border px-4 py-2'>{showDistance(distance)} km</td>
+      <td className='border px-4 py-2'>{showDistance(distance)}</td>
       <td className='border px-4 py-2'>${price}</td>
       <td className='border px-4 py-2'>{showBadgeRating2()}</td>
       <td className='border px-4 py-2'>

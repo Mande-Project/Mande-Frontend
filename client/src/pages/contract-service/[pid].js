@@ -21,6 +21,7 @@ const HireWorker = () => {
       const getServices = async () => {
         const { id_worker_job } = router.query
         const res = await getPeopleJobsAPI(user.id);
+        
         const getService = res.filter((service) => service.id_worker_job === parseInt(id_worker_job))[0];
         setService(getService)
       };

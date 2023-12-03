@@ -11,10 +11,10 @@ const TableHireServices = ({ allServices }) => {
             <th style={{ width: '15%' }} className='py-2'>
               Job
             </th>
-            <th style={{ width: '25%' }} className='py-2'>
+            <th style={{ width: '20%' }} className='py-2'>
               Worker Name
             </th>
-            <th style={{ width: '10%' }} className='py-2'>
+            <th style={{ width: '20%' }} className='py-2'>
               Distance
             </th>
             <th style={{ width: '20%' }} className='py-2'>
@@ -23,7 +23,7 @@ const TableHireServices = ({ allServices }) => {
             <th style={{ width: '10%' }} className='py-2'>
               Rating
             </th>
-            <th style={{ width: '20%' }} className='py-2'>
+            <th style={{ width: '15%' }} className='py-2'>
               Options
             </th>
           </tr>
