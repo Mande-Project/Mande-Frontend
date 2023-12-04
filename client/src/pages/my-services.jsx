@@ -18,13 +18,9 @@ const MyServices = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(servicesUser);
-  }, [servicesUser]);
 
   useEffect(() => {
     const getServices = async () => {
-      console.log(user.id);
       const res = await getServicesUser(user.id);
       if (res) {
         const { data } = res;

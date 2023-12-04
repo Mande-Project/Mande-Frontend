@@ -105,7 +105,6 @@ const ChooseJob = () => {
 
   const onHandleButton2 = async () => {
     if (validateValues2()) {
-      console.log(getValues());
       const res = await deleteJobAPI(getValues());
       if (res) {
         if (res.type === 'success') {

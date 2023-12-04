@@ -21,10 +21,8 @@ const HireServices = () => {
   const [ratingFilter, setRatingFilter] = useState(typeFilterByRating[0]);
 
   useEffect(() => {
-    console.log(user.id)
     const getServices = async () => {
       const res = await getPeopleJobsAPI(user.id);
-      console.log(res)
       if (res) {
         const filteredServices = res.filter(
           (service) =>
