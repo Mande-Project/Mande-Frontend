@@ -29,7 +29,7 @@ const HireServices = () => {
         const filteredServices = res.filter(
           (service) =>
             service.worker_available !== false &&
-            service.id_worker_job !== user.id,
+            service.id_worker !== user.id,
         );
         if (filteredServices.length > 0) {
           setAllServices(filteredServices);
