@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const libraries = ['places'];
 
+// eslint-disable-next-line react/prop-types
 function GoogleMaps({onAddressSelect}) {
   const [map, setMap] = useState(null);
   const [zoom, setZoom] = useState(14);
@@ -37,6 +38,7 @@ function GoogleMaps({onAddressSelect}) {
     });
     reverseGeocode(event.latLng);
     setDefaultMarkerPosition(null);
+    setZoom(18);
   };
 
   function pluscodeToDirection(codigoPlus) {
@@ -160,6 +162,7 @@ function GoogleMaps({onAddressSelect}) {
 
   return (
     <LoadScript
+      // eslint-disable-next-line no-undef
       googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_URL}
       libraries={libraries}
     >
