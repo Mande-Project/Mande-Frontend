@@ -29,7 +29,6 @@ export const setJobAPI = async (body) => {
 
 export const deleteJobAPI = async (body) => {
   try {
-    console.log(body)
     const res = await apiWithoutAutorization.delete("mande_app/worker_job/", { data: body })
     const { data } = res
     return { type: 'success', message: data };

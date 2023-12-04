@@ -1,7 +1,6 @@
 import { apiWithoutAutorization } from '../libs/axios';
 
 export const getServicesUser = async (id) => {
-  console.log(id)
   try {
     const res = await apiWithoutAutorization.get(
       `/mande_app/services/?id_user=${id}`,

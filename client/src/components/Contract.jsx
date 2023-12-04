@@ -94,9 +94,7 @@ const Contract = ({ contract, getMyServices, setServicesUser, setFilter }) => {
             'success',
           ).then(() => {
             setServicesUser(null);
-            console.log(user.id)
             getMyServices(user.id, setServicesUser);
-            console.log('recarga');
             setFilter('All');
           });
         };
@@ -106,7 +104,6 @@ const Contract = ({ contract, getMyServices, setServicesUser, setFilter }) => {
   };
 
   const handleCancelContract = () => {
-    console.log(id_service);
 
     Swal.fire({
       title: 'Are you sure?',
@@ -129,10 +126,8 @@ const Contract = ({ contract, getMyServices, setServicesUser, setFilter }) => {
             'success',
           ).then(() => {
             setServicesUser(null);
-            console.log(user.id)
             getMyServices(user.id, setServicesUser);
             setFilter('All');
-            console.log('recarga');
           });
         };
         cancelServices();

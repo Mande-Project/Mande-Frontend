@@ -17,7 +17,6 @@ const EditWorker = () => {
     if (router.query && router.query.pid) {
       const { pid } = router.query
       const getWorker = workers.filter(worker => worker.id === parseInt(pid))[0]
-      console.log(getWorker)
       setWorker(getWorker)
     }
   }, [query])
@@ -38,9 +37,6 @@ const EditWorker = () => {
     // const { name, company, email, phone } = valores;
 
     try {
-      console.log('updating')
-
-      // console.log(data);
 
       // Mostrar Alerta
       Swal.fire(
@@ -76,7 +72,6 @@ const EditWorker = () => {
               >
 
                 {props => {
-                  // console.log(props);
                   return (
                     <form
                       className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"

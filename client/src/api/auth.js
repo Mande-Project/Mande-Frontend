@@ -65,7 +65,6 @@ export const signupRequest = async (body) => {
   } catch (err) {
     signupFail()
     try {
-      console.log(body)
       if(err.request.status === 400)
       {
         if(err.request.response){

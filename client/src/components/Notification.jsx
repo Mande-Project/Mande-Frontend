@@ -1,9 +1,20 @@
-import {  Dialog, Flex, Text } from '@radix-ui/themes';
+import { Dialog, Flex, Text } from '@radix-ui/themes';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 const Notification = ({ notification }) => {
-  const {  date, subject, body } = notification;
+  const { date, subject, body } = notification;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1; // Los meses en JavaScript comienzan desde 0
+    const year = date.getUTCFullYear();
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
 
   const truncateString = (str, num) => {
     if (!str) {
@@ -17,7 +28,7 @@ const Notification = ({ notification }) => {
 
   return (
     <tr>
-      <td className='border px-4 py-2'>{date}</td>
+      <td className='border px-4 py-2'>{formatDate(date)}</td>
       <td className='border px-4 py-2'>{truncateString(subject, 25)}</td>
       <td className='border px-4 py-2'>{truncateString(body, 25)}</td>
       <td className='border px-4 py-2'>
