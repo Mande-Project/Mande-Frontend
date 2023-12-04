@@ -13,6 +13,7 @@ import Layout from '../components/Layout';
 import PrivateRoute2 from '../components/PrivateRoute2';
 import { useAuthStore } from '../store/auth';
 import { RegisterValidation } from '../validation/registerValidation';
+import GoogleMaps from '../utils/map'
 
 const Register = () => {
   const router = useRouter();
@@ -21,6 +22,11 @@ const Register = () => {
   const [isValidFirstPart, setIsValidFirstPart] = useState(false);
   const [tryToPass, setTryToPass] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState('');
+
+  const handleAddressSelect = (address) => {
+    setSelectedAddress(address);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -31,15 +37,16 @@ const Register = () => {
       role: '',
       password: '',
       re_password: '',
-      residenceAddress: '',
-      country: '',
-      city: '',
       address: '',
     },
     validationSchema: RegisterValidation,
     onSubmit: (values) => {
-      const { first_name, last_name, residenceAddress, country, city } = values;
-      values.address = `${residenceAddress}, ${city}, ${country}`;
+      const { first_name, last_name } = values;
+      if(selectedAddress == ''){
+        values.address = 'Cl. 13 #100-00, Cali, Colombia';
+      } else {
+        values.address = selectedAddress;
+      }
       values.username = `${first_name}_${last_name}`;
       values.phone = values.phone.toString();
       handleSignUp(values);
@@ -146,7 +153,7 @@ const Register = () => {
                         className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                         id='first_name'
                         type='text'
-                        placeholder='User FirstName'
+                        placeholder='User First Name'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.first_name}
@@ -171,7 +178,7 @@ const Register = () => {
                         className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                         id='last_name'
                         type='text'
-                        placeholder='User LastName'
+                        placeholder='User Last Name'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.last_name}
@@ -306,7 +313,7 @@ const Register = () => {
                       className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='phone'
                       type='number'
-                      placeholder='User Phonenumber'
+                      placeholder='User Phone number'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.phone}
@@ -318,6 +325,10 @@ const Register = () => {
                   ) : null}
 
                   <div className='mb-4'>
+                    <GoogleMaps onAddressSelect={handleAddressSelect}/>
+                  </div>
+
+                  {/* <div className='mb-4'>
                     <label
                       className='mb-2 block text-sm font-bold text-gray-700'
                       htmlFor='residenceAddress'
@@ -329,7 +340,7 @@ const Register = () => {
                       className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                       id='residenceAddress'
                       type='text'
-                      placeholder='User recidence address'
+                      placeholder='User residence address'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.residenceAddress}
@@ -388,7 +399,7 @@ const Register = () => {
 
                   {formik.touched.city && formik.errors.city ? (
                     <ErrorForm description={formik.errors.city} />
-                  ) : null}
+                  ) : null} */}
 
                   <input
                     type='submit'
