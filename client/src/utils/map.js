@@ -19,16 +19,15 @@ function GoogleMaps({onAddressSelect}) {
       console.error('No se encontraron detalles para esta ubicación');
       return;
     }
-    setUserInput(place.formatted_address);
     setCenter({
       lat: place.geometry.location.lat(),
       lng: place.geometry.location.lng(),
     });
-    setSelectedAddress(place.formatted_address);
     setSelectedLocation({
       lat: place.geometry.location.lat(),
       lng: place.geometry.location.lng(),
     });
+    reverseGeocode(place.geometry.location);
   };
 
   const handleMapClick = (event) => {
@@ -90,34 +89,42 @@ function GoogleMaps({onAddressSelect}) {
           let direccion = '';
           let ciudad = '';
           let pais = '';
-          addressComponents.forEach(component => {
-            if (component.types.includes('route')) {
-              direccion = component.long_name + direccion;
-            } else if (component.types.includes('transit_station')) {
-                direccion = component.long_name;
-            } else if (component.types.includes('neighborhood')) {
-                direccion = component.long_name;
-            }
+          let isDirectionSet = false;
+          for(let i = 0; i < addressComponents.length; i++) {
+            const component = addressComponents[i];
             if (component.types.includes('street_number')) {
-                if(component.long_name[0] === '#'){
-                    direccion = ` ${component.long_name}`;
-                } else {
-                    direccion = ` #${component.long_name}`;
-                }
+              if(component.long_name[0] === '#'){
+                  direccion = ` ${component.long_name}`;
+              } else {
+                  direccion = ` #${component.long_name}`;
+              }
             }
+
             if (component.types.includes('locality') || component.types.includes('administrative_area_level_2')) {
               ciudad = component.long_name;
             }
             if (component.types.includes('country')) {
               pais = component.long_name;
             }
+
+            if (component.types.includes('route') && !isDirectionSet) {
+              direccion = component.long_name + direccion;
+              isDirectionSet = true;
+            } else if (component.types.includes('transit_station') && !isDirectionSet) {
+              direccion = component.long_name;
+              isDirectionSet = true;
+            } else if (component.types.includes('neighborhood') && !isDirectionSet) {
+              direccion = component.long_name;
+              isDirectionSet = true;
+            }
+            
             if (component.types.includes('plus_code')) {
                 direccion = pluscodeToDirection(component.long_name);
                 setSelectedAddress(direccion);
                 setUserInput(direccion);
                 return ;
             }
-          });
+          }
   
           const direccionCompleta = `${direccion}, ${ciudad}, ${pais}`;
           setSelectedAddress(direccionCompleta);
