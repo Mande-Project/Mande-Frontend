@@ -1,18 +1,30 @@
+/* eslint-disable no-undef */
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom"; // Import the jest-dom extensions for expect
-import Login from "../src/pages/login"; // Adjust the import path to match your project's structure
+import "@testing-library/jest-dom"; 
+import Login from "../src/pages/login"; 
 import { useAuthStore } from "../src/store/auth";
-/* eslint-disable no-undef */
 
-jest.mock("next/navigation", () => ({
+
+jest.mock('next/router', () => ({
   useRouter() {
     return {
-      prefetch: () => null,
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
     };
   },
 }));
+
+  jest.mock("next/navigation", () => ({
+    useRouter() {
+      return {
+        prefetch: () => null,
+      };
+    },
+  }));
 
 jest.mock("../src/components/Layout.jsx", () => ({
   __esModule: true,

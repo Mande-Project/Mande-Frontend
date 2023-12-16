@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Fragment} from 'react';
+import React, { Fragment, Suspense} from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Header';
@@ -33,28 +33,28 @@ const Layout = ({ children }) => {
         </div>
       ) : (
         <>
-            <div className='min-h-screen bg-gray-200'>
-              <div className='flex min-h-screen'>
-                <Sidebar />
+          <div className='min-h-screen bg-gray-200'>
+            <div className='flex min-h-screen'>
+              <Sidebar />
 
-                <main className='p-5 sm:min-h-screen sm:w-2/3 xl:w-4/5'>
-                  <ToastContainer
-                    position='top-right'
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss={false}
-                    draggable
-                    pauseOnHover
-                    theme='dark'
-                  />
-                  <Header />
-                  { children }
-                </main>
-              </div>
+              <main className='p-5 sm:min-h-screen sm:w-2/3 xl:w-4/5'>
+                <ToastContainer
+                  position='top-right'
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss={false}
+                  draggable
+                  pauseOnHover
+                  theme='dark'
+                />
+                <Header />
+                <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+              </main>
             </div>
+          </div>
         </>
       )}
     </Fragment>

@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-export const useAuthStore = create(devtools(persist((set) => ({
+export const useAuthStore = create(devtools(persist((set, get) => ({
   access: null,
   refresh: null,
   user: null,
