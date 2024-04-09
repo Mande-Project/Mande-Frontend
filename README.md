@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  a href="https://mande-frontend-r26hnwsuj-mandeuv.vercel.app/"><img src="./assets/logo.svg" alt="MANDE" width="200"></a>
+  <a href="https://mande-frontend-r26hnwsuj-mandeuv.vercel.app/"><img src="./assets/logo.svg" alt="MANDE" width="200"></a>
   <br>
   MANDE
   <br>
